@@ -1,0 +1,34 @@
+$height: 90vh;
+
+.matches {
+  .container-fluid, .col, .row {
+    margin: 0;
+    padding: 0;
+  }
+
+  .contacts {
+    background-color: white;
+    height: $height;
+    overflow-y: auto;
+    @media screen {
+      @media (min-width: 767px) {
+        display: block!important;
+      }
+    }
+  }
+
+  .col-chat {
+    background-color: lightblue;
+    height: $height;
+    overflow-y: auto;
+    z-index: 20;
+    @media screen {
+      @media (max-width: 767px) {
+        display: none;
+      }
+    }
+
+
+  }
+
+}

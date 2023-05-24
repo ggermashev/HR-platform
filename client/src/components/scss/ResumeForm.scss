@@ -1,0 +1,39 @@
+.resume-form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .inputs {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+
+    * {
+      margin: {
+        top: 10px;
+        bottom: 10px;
+      };
+    }
+  }
+
+  .university, .company {
+    border-top: 2px solid black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .publish {
+    margin: {
+      top: 100px;
+    }
+  }
+
+  .delete-img {
+    width: 30px;
+    height: 30px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

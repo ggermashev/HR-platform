@@ -1,0 +1,27 @@
+$border-black: 2px solid black;
+
+.login {
+  height: 90vh;
+  position: relative;
+
+  .login-col {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    align-items: center;
+
+    .login-form {
+      background-color: white;
+      width: 80%;
+      max-width: 600px;
+      min-height: 200px;
+      border: $border-black;
+      border-radius: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+  }
+}

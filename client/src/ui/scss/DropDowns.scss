@@ -1,0 +1,25 @@
+.accordion {
+  width: 80vw;
+  max-width: 1000px;
+  --bs-accordion-border-color: black;
+
+  .accordion-item {
+    button {
+      background-color: mediumpurple !important;
+      color: white;
+    }
+
+  }
+
+  .accordion-body {
+    background-color: lightblue;
+  }
+
+  .accordion-button:not(.collapsed)::after {
+    background-image: var(--bs-accordion-btn-icon);
+  }
+
+  .accordion-button:focus {
+    box-shadow: none;
+  }
+}

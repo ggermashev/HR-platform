@@ -1,0 +1,10 @@
+.form-check-input[type=radio]:checked {
+  background-color: white;
+  border: 2px solid mediumpurple;
+  background-image: none;
+}
+.form-check-input[type=radio]:focus {
+  box-shadow: none;
+}
+
+/*# sourceMappingURL=FormRadio.css.map */

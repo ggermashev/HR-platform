@@ -1,0 +1,21 @@
+.btn {
+  padding: 10px;
+  margin: 5px;
+  background-color: black;
+  border: none;
+  color: #C1C8E4;
+
+  &:hover {
+    background-color: #5680E9;
+  }
+
+  &:focus {
+    background-color: black;
+    color: #C1C8E4;
+  }
+}
+
+.btn-active {
+  background-color: black!important;
+  color: white;
+}

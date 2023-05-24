@@ -1,0 +1,17 @@
+.navbar {
+  background-color: black;
+}
+.navbar .active {
+  color: #C1C8E4 !important;
+}
+.navbar a {
+  color: mediumpurple;
+}
+.navbar a:hover, .navbar a:active, .navbar a:focus {
+  color: #C1C8E4;
+}
+.navbar .navbar-toggler {
+  background-color: mediumpurple;
+}
+
+/*# sourceMappingURL=Navigation.css.map */

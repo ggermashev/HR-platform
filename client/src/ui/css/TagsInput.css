@@ -1,0 +1,17 @@
+.choice-input {
+  padding-bottom: 300px;
+}
+.choice-input .choice-field {
+  border: 1px solid black;
+  position: absolute;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.choice-input .choice-field .close-btn {
+  color: red;
+  position: absolute;
+  top: -15px;
+  right: 5px;
+}
+
+/*# sourceMappingURL=TagsInput.css.map */

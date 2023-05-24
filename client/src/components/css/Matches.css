@@ -1,0 +1,27 @@
+.matches .container-fluid, .matches .col, .matches .row {
+  margin: 0;
+  padding: 0;
+}
+.matches .contacts {
+  background-color: white;
+  height: 90vh;
+  overflow-y: auto;
+}
+@media screen and (min-width: 767px) {
+  .matches .contacts {
+    display: block !important;
+  }
+}
+.matches .col-chat {
+  background-color: lightblue;
+  height: 90vh;
+  overflow-y: auto;
+  z-index: 20;
+}
+@media screen and (max-width: 767px) {
+  .matches .col-chat {
+    display: none;
+  }
+}
+
+/*# sourceMappingURL=Matches.css.map */

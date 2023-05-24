@@ -1,0 +1,19 @@
+.navbar {
+  background-color: black;
+
+  .active {
+    color: #C1C8E4!important;
+  }
+
+  a {
+    color: mediumpurple;
+
+    &:hover, &:active, &:focus {
+      color: #C1C8E4;
+    }
+  }
+
+  .navbar-toggler {
+    background-color: mediumpurple;
+  }
+}

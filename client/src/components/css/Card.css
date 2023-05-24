@@ -1,0 +1,38 @@
+.card {
+  width: 100%;
+  height: 60vh;
+  background-color: white;
+  position: relative;
+  user-select: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  max-width: 400px;
+  border: 10px solid #5680E9;
+  border-radius: 40px;
+  color: black;
+}
+.card .info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+.card .info-container .top-part {
+  height: 40vh;
+  overflow-y: auto;
+  margin: 0 auto;
+}
+.card .scroll-container {
+  position: absolute;
+  bottom: 0;
+  height: 20vh;
+  overflow-y: auto;
+  align-self: start;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/*# sourceMappingURL=Card.css.map */

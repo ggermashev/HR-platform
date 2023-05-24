@@ -1,0 +1,31 @@
+.vacancy-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.vacancy-form .form-container {
+  margin-top: 30px;
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+.vacancy-form .add-question {
+  margin-top: 30px;
+}
+.vacancy-form .add-variant {
+  margin-bottom: 50px;
+  max-width: 300px;
+}
+.vacancy-form .publish {
+  margin-top: 100px;
+}
+.vacancy-form .delete-img {
+  width: 30px;
+  height: 30px;
+}
+.vacancy-form .delete-img:hover {
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=VacancyForm.css.map */

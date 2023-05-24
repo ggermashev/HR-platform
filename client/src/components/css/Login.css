@@ -1,0 +1,25 @@
+.login {
+  height: 90vh;
+  position: relative;
+}
+.login .login-col {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+}
+.login .login-col .login-form {
+  background-color: white;
+  width: 80%;
+  max-width: 600px;
+  min-height: 200px;
+  border: 2px solid black;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/*# sourceMappingURL=Login.css.map */

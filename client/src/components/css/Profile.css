@@ -1,0 +1,39 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.profile .row {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.profile .line {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+  width: 100%;
+}
+.profile .line div {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+@media screen and (max-width: 767px) {
+  .profile {
+    justify-content: space-between;
+  }
+}
+.profile .ava {
+  width: 100%;
+  border-radius: 100%;
+}
+.profile .resumes {
+  margin: 0;
+}
+.profile .resumes .col {
+  padding: 0;
+}
+
+/*# sourceMappingURL=Profile.css.map */

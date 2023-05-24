@@ -1,0 +1,17 @@
+.select-input {
+  width: 100%;
+  background-color: white;
+
+  option {
+    background-color: lightblue;
+    font-size: 1.1rem;
+  }
+
+  option:hover {
+    background-color: white;
+  }
+}
+
+select.decorated option:hover {
+  box-shadow: 0 0 10px 100px #1882A8 inset;
+}

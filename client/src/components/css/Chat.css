@@ -1,0 +1,81 @@
+.chat {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  padding-top: 60px;
+  padding-bottom: 50px;
+  overflow-y: auto;
+}
+.chat .head {
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  background-color: white;
+}
+.chat .head p {
+  margin: 0;
+  text-align: center;
+}
+.chat .head .delete-btn {
+  position: absolute;
+  right: 0;
+}
+.chat .head .profile-btn {
+  position: absolute;
+  right: 80px;
+}
+.chat .input-field {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
+.chat .messages {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+.chat .messages .my {
+  float: right;
+  clear: both;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding: 5px;
+  background-color: white;
+  border-radius: 5px;
+  min-width: 50px;
+}
+.chat .messages .other {
+  float: left;
+  clear: both;
+  margin-left: 20px;
+  margin-bottom: 20px;
+  padding: 5px;
+  background-color: white;
+  border-radius: 5px;
+  min-width: 50px;
+}
+.chat .messages .choose-time {
+  position: relative;
+  clear: both;
+  width: auto;
+}
+.chat .messages .choose-time .calendar {
+  width: 100%;
+  height: auto;
+  background-color: white;
+  position: absolute;
+  bottom: 50px;
+  left: 0px;
+}
+
+/*# sourceMappingURL=Chat.css.map */

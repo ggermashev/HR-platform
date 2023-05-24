@@ -1,0 +1,134 @@
+.search {
+  min-height: 90vh;
+  position: relative;
+  user-select: none;
+}
+.search .filters {
+  background-color: #8860D0;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  position: relative;
+  padding: 0;
+}
+.search .filters .filter {
+  max-width: 200px;
+  margin: 0;
+  padding: 0;
+}
+@media screen and (min-width: 767px) {
+  .search .filters {
+    flex-direction: column;
+    min-height: 90vh;
+  }
+  .search .filters * {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media screen and (max-width: 767px) {
+  .search .filters {
+    flex-direction: row;
+    min-height: 20vh;
+  }
+  .search .filters * {
+    margin: 0;
+  }
+}
+.search .cards {
+  background-color: #C1C8E4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  padding: 0;
+}
+.search .cards .dislike {
+  height: 90vh;
+  width: 100%;
+  justify-self: end;
+  pointer-events: none;
+  background-color: red;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  color: #C1C8E4;
+  z-index: 50;
+}
+.search .cards .like {
+  height: 90vh;
+  width: 100%;
+  justify-self: start;
+  pointer-events: none;
+  background-color: green;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  color: #C1C8E4;
+  z-index: 50;
+}
+.search .cards .card-more-info {
+  position: absolute;
+  background-color: white;
+  z-index: 20;
+  display: none;
+  height: 80vh;
+  overflow-y: auto;
+}
+.search .cards .more-info-panel {
+  height: 10vh;
+  display: none;
+  position: absolute;
+  bottom: 0;
+  flex-direction: row;
+  justify-content: center;
+  pointer-events: initial;
+  user-select: initial;
+  max-height: 70px;
+  z-index: 20;
+}
+.search .cards .like-img {
+  height: 40px;
+  width: 40px;
+}
+.search .cards .like-img:hover {
+  color: green;
+  cursor: pointer;
+}
+.search .cards .dislike-img {
+  height: 40px;
+  width: 40px;
+}
+.search .cards .dislike-img:hover {
+  color: red;
+  cursor: pointer;
+}
+@media screen and (max-width: 767px) {
+  .search .cards {
+    min-height: 70vh;
+  }
+}
+.search .row {
+  margin: 0;
+  padding: 0;
+}
+.search .col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.search .container-fluid {
+  margin: 0;
+  padding: 0;
+}
+
+/*# sourceMappingURL=Search.css.map */

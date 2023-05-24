@@ -1,0 +1,27 @@
+.resume {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .info-container {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .line {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: auto;
+  }
+
+  .info {
+    width: 100%;
+    max-width: 800px;
+    text-align: start;
+    border: 2px solid black;
+    padding: 20px;
+    border-radius: 30px;
+  }
+}

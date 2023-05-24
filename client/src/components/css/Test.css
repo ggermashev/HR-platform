@@ -1,0 +1,26 @@
+.test {
+  position: relative;
+  height: 90vh;
+  width: 100%;
+  padding-top: 60px;
+}
+.test .header {
+  position: absolute;
+  top: 0;
+  height: 60px;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+.test .test-filed {
+  height: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/*# sourceMappingURL=Test.css.map */

@@ -1,0 +1,38 @@
+.contact {
+  min-height: 60px;
+  padding: 10px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.contact:hover {
+  cursor: pointer;
+}
+.contact .photo {
+  float: left;
+}
+.contact .photo img {
+  height: 50px;
+  width: 50px;
+  border-radius: 100%;
+}
+.contact .content {
+  position: relative;
+  width: 100%;
+}
+.contact .content p {
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+.contact .content .msg {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.contact-active {
+  background-color: mediumpurple;
+  color: white;
+}
+
+/*# sourceMappingURL=Contact.css.map */

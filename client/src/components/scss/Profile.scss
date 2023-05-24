@@ -1,0 +1,51 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+
+  .row {
+    margin: {
+      top: 20px;
+      bottom: 20px;
+    };
+  }
+
+  .line {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+
+    div {
+      margin: {
+        left: 5px;
+        right: 5px;
+      };
+    }
+  }
+
+  @media screen {
+    @media (max-width: 767px) {
+      justify-content: space-between;
+    }
+  }
+
+  .ava {
+    width: 100%;
+    border-radius: 100%;
+  }
+
+  .resumes {
+    margin: 0;
+
+    .col {
+      padding: 0;
+    }
+
+  }
+
+}

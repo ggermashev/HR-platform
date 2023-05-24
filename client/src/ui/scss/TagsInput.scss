@@ -1,0 +1,19 @@
+.choice-input {
+  padding-bottom: 300px;
+
+  .choice-field {
+    border: 1px solid black;
+    position: absolute;
+    padding: {
+      left: 20px;
+      right: 20px;
+    };
+
+    .close-btn {
+      color: red;
+      position: absolute;
+      top: -15px;
+      right: 5px;
+    }
+  }
+}

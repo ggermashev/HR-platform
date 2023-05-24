@@ -1,0 +1,20 @@
+.accordion {
+  width: 80vw;
+  max-width: 1000px;
+  --bs-accordion-border-color: black;
+}
+.accordion .accordion-item button {
+  background-color: mediumpurple !important;
+  color: white;
+}
+.accordion .accordion-body {
+  background-color: lightblue;
+}
+.accordion .accordion-button:not(.collapsed)::after {
+  background-image: var(--bs-accordion-btn-icon);
+}
+.accordion .accordion-button:focus {
+  box-shadow: none;
+}
+
+/*# sourceMappingURL=DropDowns.css.map */

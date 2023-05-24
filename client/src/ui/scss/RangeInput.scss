@@ -1,0 +1,28 @@
+.range-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .label {
+    margin: {
+      right: 10px;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    };
+  }
+
+  input[type='range'] {
+    -webkit-appearance: none !important;
+    background: white;
+    height: 10px;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background:black;
+    height:20px;
+    width:15px;
+  }
+}
