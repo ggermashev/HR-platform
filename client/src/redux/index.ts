@@ -6,6 +6,7 @@ import citiesSlice from "./citiesSlice";
 import experiencesSlice from "./experiencesSlice";
 import professionsSlice from "./professionsSlice";
 import skillsSlice from "./skillsSlice";
+import isAuthenticatedSlice from "./isAuthenticatedSlice";
 
 
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     experiences: experiencesSlice,
     professions: professionsSlice,
     skills: skillsSlice,
+    isAuthenticated: isAuthenticatedSlice,
 })
 
 export const store = configureStore({

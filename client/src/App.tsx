@@ -8,24 +8,21 @@ import About from "./components/About";
 import Search from "./components/Search";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
-import {isUser} from "./api/Api";
 import Logout from "./components/Logout";
 import Registration from "./components/Registration";
 import ResumeForm from "./components/ResumeForm";
 import Matches from "./components/Matches";
 import VacancyForm from "./components/VacancyForm";
 import {useSelector} from "react-redux";
+import {isAuth} from "./http/userApi";
+import {useAppDispatch, useAppSelector} from "./hooks/reduxHooks";
+import {setIsAuthenticated} from "./redux/isAuthenticatedSlice";
 
 function App() {
     // @ts-ignore
     const user = useSelector(state => state.user)
-    const [isAuth, setIsAuth] = useState(false)
-    useEffect(() => {
-        // isUser(user.key).then(val => {
-        //     setIsAuth(val)
-        // })
-        setIsAuth(true)
-    }, [])
+    const isAuthenticated = useAppSelector(state => state.isAuthenticated)
+    const dispatch = useAppDispatch()
 
     return (
         <Fragment>
@@ -33,14 +30,14 @@ function App() {
                 <main>
                     <Routes>
                         <Route path="/" element={<About/>}/>
-                        {isAuth && <Route path="/profile" element={<Profile/>}/>}
-                        {isAuth && <Route path="/vacancy_form" element={<VacancyForm/>}/>}
-                        {isAuth && <Route path="/matches" element={<Matches/>}/>}
-                        {isAuth && <Route path="/resume_form" element={<ResumeForm/>}/>}
+                        {isAuthenticated.auth && <Route path="/profile" element={<Profile/>}/>}
+                        {isAuthenticated.auth && <Route path="/vacancy_form" element={<VacancyForm/>}/>}
+                        {isAuthenticated.auth && <Route path="/matches" element={<Matches/>}/>}
+                        {isAuthenticated.auth && <Route path="/resume_form" element={<ResumeForm/>}/>}
                         <Route path="/search" element={<Search/>}/>
-                        {!isAuth && <Route path="/login" element={<Login/>}/>}
-                        {!isAuth && <Route path="/registration" element={<Registration/>}/>}
-                        {isAuth && <Route path="/logout" element={<Logout/>}/>}
+                        {!isAuthenticated.auth && <Route path="/login" element={<Login/>}/>}
+                        {!isAuthenticated.auth && <Route path="/registration" element={<Registration/>}/>}
+                        {isAuthenticated.auth && <Route path="/logout" element={<Logout/>}/>}
                     </Routes>
                 </main>
             <Footer/>

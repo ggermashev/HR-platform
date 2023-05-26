@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken')
 const {User} = require('../models/models')
 const {where} = require("sequelize");
 
-const generateJwt = (id, login, role) => {
+const generateJwt = (id, firstName, lastName, login, role) => {
     return jwt.sign(
-        {id, login, role},
+        {id, firstName, lastName, login, role},
         process.env.SECRET_KEY,
         {expiresIn: '24h'}
     )
@@ -14,7 +14,7 @@ const generateJwt = (id, login, role) => {
 
 class UserController {
     async registration(req, res, next) {
-        const {firstName, lastName, secondName, phone, birthday, login, password, role} = req.body
+        const {firstName, lastName, login, password, role} = req.body
         if (!login || !password) {
             return next(ApiError.badRequest('Некорректный login или password'))
         }
@@ -23,8 +23,8 @@ class UserController {
             return next(ApiError.badRequest('Пользователь с таким login уже существует'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
-        const user = await User.create({login, role, password: hashPassword})
-        const token = generateJwt(user.id, user.login, user.role)
+        const user = await User.create({firstName, lastName, login, role, password: hashPassword})
+        const token = generateJwt(user.id, user.firstName, user.lastName, user.login, user.role)
         return res.json({token})
     }
 
@@ -38,12 +38,12 @@ class UserController {
         if (!comparePassword) {
             return next(ApiError.internal('Указан неверный пароль'))
         }
-        const token = generateJwt(user.id, user.login, user.role)
+        const token = generateJwt(user.id, user.firstName, user.lastName, user.login, user.role)
         return res.json(token)
     }
 
     async check(req, res, next) {
-        const token = generateJwt(req.user.id, req.user.login, req.user.role)
+        const token = generateJwt(req.user.id, req.user.firstName, req.user.lastName, req.user.login, req.user.role)
         return res.json({token})
     }
 }

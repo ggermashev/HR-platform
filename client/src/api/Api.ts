@@ -1,11 +1,11 @@
 import {useSelector} from "react-redux";
-import {IResume, ITest, IUser, IVacancy} from "../types/types";
+import {IResume, IUser, IVacancy} from "../types/types";
 
-export async function isUser(key: string) {
-    const response = await fetch(`/api/isUser/${key}/`)
-    const isUser = response.ok
-    return isUser
-}
+// export async function isUser(key: string) {
+//     const response = await fetch(`/api/isUser/${key}/`)
+//     const isUser = response.ok
+//     return isUser
+// }
 
 //Список контактов (они же мэтчи)
 export async function getContacts(userId: number) {
@@ -130,15 +130,6 @@ export async function getTest(vacancyId: number) {
     const response = await fetch(`api/tests/${vacancyId}/`)
     const json = await response.json()
     return json
-}
-
-//Добавить тест к вакансии
-export async function createTest(test: ITest) {
-    const response = await fetch(`/api/tests/`, {
-        method: 'POST',
-        body: JSON.stringify(test)
-    })
-    return response.ok
 }
 
 //Лайк резюме

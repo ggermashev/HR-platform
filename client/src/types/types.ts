@@ -4,20 +4,18 @@ export interface IQuestion {
     question: string;
     variants: string[];
     answer: string;
-    testId?: number;
+    vacancyId: number,
 }
 
-export interface ITest {
-    id?: number,
-    vacancyId?: number,
-    questions: IQuestion[]
+export interface IAnswerVariant {
+    variant: string,
+    questionId: number
 }
 
 export interface IContact {
     id?: number;
     idVacancy: number;
     idResume: number;
-    messages: IMessage[]
 }
 
 export interface IMessage {
@@ -49,13 +47,8 @@ export interface IRecentLikeResumeToVacancy {
 
 export interface IUser {
     id?: number,
-    key: string,
     firstName: string,
     lastName: string,
-    secondName: string,
-    phone: string,
-    mail: string,
-    birthDay: string,
     login: string,
     password: string,
     role: "USER" | "HR",
@@ -91,7 +84,7 @@ export interface IWorkExperience {
 
 export interface ISkill {
     id?: number,
-    name: string
+    skill: string
 }
 
 export interface ICity {
@@ -105,13 +98,14 @@ export interface IJob {
     profession: string,
     post: string,
     todos: string,
-    workFrom: string,
-    workTo: string
+    workFrom: number,
+    workTo: number,
+    resumeId: number
 }
 
 export interface IResume {
     id?: number,
-    ownerId: number | null,
+    userId: number | null,
     profession: string,
     post: string,
     city: string,
@@ -126,7 +120,7 @@ export interface IResume {
 
 export interface IVacancy {
     id?: number,
-    ownerId: number | null,
+    userId: number | null,
     companyName: string,
     profession: string,
     post: string,
@@ -138,6 +132,7 @@ export interface IVacancy {
     desirable: string,
     offer: string,
     skills: string[],
+    questions: IQuestion[],
 }
 
 

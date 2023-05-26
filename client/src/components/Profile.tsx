@@ -17,16 +17,16 @@ const Profile = () => {
     const [data, setData] = useState<IResume[] | IVacancy[]>([])
 
     useEffect(() => {
-        user?.role == "user"
-            ? getResumes(user?.key).then(
-                vals => {
-                    setData(vals)
-                })
-            : getVacancies(user?.key).then(
-                vals => {
-                    setData(vals)
-                }
-            )
+        // user?.role == "user"
+        //     ? getResumes(user?.key).then(
+        //         vals => {
+        //             setData(vals)
+        //         })
+        //     : getVacancies(user?.key).then(
+        //         vals => {
+        //             setData(vals)
+        //         }
+        //     )
 
     }, [])
 
@@ -41,20 +41,20 @@ const Profile = () => {
                         <div>
                             <div className="line">
                                 <div><p>ФИО:</p></div>
-                                <div><p>{user?.lastName} {user?.firstName} {user?.secondName}</p></div>
+                                <div><p>{user?.lastName} {user?.firstName}</p></div>
                             </div>
-                            <div className="line">
-                                <div><p>Телефон:</p></div>
-                                <div><p>{user?.phone}</p></div>
-                            </div>
-                            <div className="line">
-                                <div><p>Почта:</p></div>
-                                <div><p>{user?.mail}</p></div>
-                            </div>
-                            <div className="line">
-                                <div><p>Дата рождения:</p></div>
-                                <div><p>{user?.birthDay}</p></div>
-                            </div>
+                            {/*<div className="line">*/}
+                            {/*    <div><p>Телефон:</p></div>*/}
+                            {/*    <div><p>{user?.phone}</p></div>*/}
+                            {/*</div>*/}
+                            {/*<div className="line">*/}
+                            {/*    <div><p>Почта:</p></div>*/}
+                            {/*    <div><p>{user?.mail}</p></div>*/}
+                            {/*</div>*/}
+                            {/*<div className="line">*/}
+                            {/*    <div><p>Дата рождения:</p></div>*/}
+                            {/*    <div><p>{user?.birthDay}</p></div>*/}
+                            {/*</div>*/}
                             <div className="line">
                                 <Btn text={"Добавить резюме"} onClick={() => {
                                     navigate("/resume_form")
