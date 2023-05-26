@@ -8,6 +8,7 @@ import {IUser} from "../types/types";
 import {registration} from "../http/userApi";
 import {useDispatch} from "react-redux";
 import {setChatId} from "../redux/activeChatSlice";
+import SelectInput from "../ui/SelectInput";
 
 const Registration = () => {
     const [user, setUser] = useState<IUser>({
@@ -31,6 +32,7 @@ const Registration = () => {
                                 <Input text={"Фамилия"}value={user.lastName} setValue={(s) => {setUser({...user, lastName: s})}}/>
                                 <Input text={"Почта"} value={user.login} setValue={(s) => {setUser({...user, login: s})}}/>
                                 <Input text={"Пароль"}value={user.password} setValue={(s) => {setUser({...user, password: s})}}/>
+                                <SelectInput default_={"Роль"} options={["USER", "HR"]} setValue={s => {setUser({...user, role: s})}}/>
                                 <Btn text={"Зарегистрироваться"} onClick={() => {
                                     registration(user).then(val => {navigate('/login')})
                                 }}/>

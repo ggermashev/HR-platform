@@ -6,6 +6,11 @@ export const getVacancy = async (vacancyId: number) => {
     return data
 }
 
+export const getVacancies = async () => {
+    const {data} = await $host.get(`api/vacancies/`)
+    return data
+}
+
 export const getVacanciesByUser = async (userId: number) => {
     const {data} = await $host.get(`api/vacancies/by_user/${userId}`)
     return data

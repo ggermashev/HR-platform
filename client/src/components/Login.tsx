@@ -42,8 +42,7 @@ const Login = () => {
                                     val => {
                                         dispatch(setUser(val))
                                         setAuth(true)
-                                        console.log(val)
-                                        // navigate("/")
+                                        navigate("/")
                                     },
                                     err => {
                                         console.log(err.message)

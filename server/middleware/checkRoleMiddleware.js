@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
-module.exports = function(role) {
-    return function(req, res, next) {
+module.exports = function (role) {
+    return function (req, res, next) {
         if (req.method === "OPTIONS") {
             next()
         }
@@ -19,5 +19,5 @@ module.exports = function(role) {
         } catch (e) {
             res.status(401).json({message: "Не авторизован"})
         }
-}
+    }
 }

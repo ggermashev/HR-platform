@@ -2,6 +2,7 @@ const Router = require('express')
 const router = new Router()
 const VacancyController = require('../controllers/vacancyController')
 
+router.get('/', VacancyController.getAll)
 router.get('/:vacancyId', VacancyController.getOne)
 router.get('/by_user/:userId', VacancyController.getByUser)
 router.post('/', VacancyController.create)

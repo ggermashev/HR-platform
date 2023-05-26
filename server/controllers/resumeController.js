@@ -14,9 +14,14 @@ class ResumeController {
         return res.json(resume)
     }
 
+    async getAll(req, res) {
+        const resumes = await Resume.findAll()
+        return res.json(resumes)
+    }
+
     async create(req, res) {
-        const {profession, post, city, salary, education, workExperience, description, universities, jobs, skills} =  req.body
-        const resume = await Resume.create({profession, post, city, salary, education, workExperience, description})
+        const {userId, profession, post, city, salary, education, workExperience, description, universities, jobs, skills} =  req.body
+        const resume = await Resume.create({userId, profession, post, city, salary, education, workExperience, description})
         for (let univ of universities) {
             const university = await University.create({name: univ.name, faculty: univ.faculty,
                 specialization: univ.specialization, graduationYear: univ.graduationYear, resumeId: resume.id})

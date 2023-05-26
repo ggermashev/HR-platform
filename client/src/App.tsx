@@ -16,7 +16,7 @@ import VacancyForm from "./components/VacancyForm";
 import {useSelector} from "react-redux";
 import {isAuth} from "./http/userApi";
 import {useAppDispatch, useAppSelector} from "./hooks/reduxHooks";
-import {clearUser} from "./redux/userSlice";
+import {clearUser, setIsAuth} from "./redux/userSlice";
 
 function App() {
     // @ts-ignore
@@ -24,7 +24,7 @@ function App() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        isAuth().then(val => {},
+        isAuth().then(val => {dispatch(setIsAuth(true))},
             err => {dispatch(clearUser())})
     }, [user])
 

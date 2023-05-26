@@ -110,23 +110,25 @@ export interface IResume {
     profession: string,
     post: string,
     city: string,
-    salary: number | null,
+    salary: number,
     education: string | null,
     workExperience: string,
     universities: IUniversity[],
     jobs: IJob[],
     description: string,
     skills: string[],
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 export interface IVacancy {
     id?: number,
-    userId: number | null,
+    userId: number,
     companyName: string,
     profession: string,
     post: string,
     city: string,
-    salary: number | null,
+    salary: number,
     workExperience: string,
     todos: string,
     requirements: string,
@@ -134,7 +136,9 @@ export interface IVacancy {
     offer: string,
     skills: string[],
     questions: IQuestion[],
-    answerVariants: IAnswerVariant[]
+    answerVariants: IAnswerVariant[],
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 

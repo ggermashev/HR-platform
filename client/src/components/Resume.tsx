@@ -1,10 +1,26 @@
-import React, {FC, Fragment} from 'react';
+import React, {FC, Fragment, useEffect, useState} from 'react';
 import "./css/Resume.css"
 import TagsContainer from "../ui/TagsContainer";
-import {IResume} from "../types/types";
+import {IJob, IResume, IUniversity} from "../types/types";
+import {getUniversities} from "../http/universityApi";
+import {getJobsByResume} from "../http/jobApi";
 
 
 const Resume: FC<{data: IResume}> = ({data}) => {
+
+    const [universities, setUniversities] = useState<IUniversity[]>()
+    const [jobs, setJobs] = useState<IJob[]>()
+
+    useEffect(() => {
+        if (data && data.id) {
+            getUniversities(data.id).then(vals => {
+                setUniversities(vals)
+            })
+            getJobsByResume(data.id).then(vals => {
+                setJobs(vals)
+            })
+        }
+    }, [])
 
     return (
         <div className="resume">
@@ -23,7 +39,7 @@ const Resume: FC<{data: IResume}> = ({data}) => {
                     <div><p>{data?.education}</p></div>
                 </div>
             </div>
-            {data?.universities.map(u =>
+            {universities && universities.map(u =>
                 <Fragment key={u.id}>
                     <h3>Учебное заведение</h3>
                     <div className="info-container">
@@ -46,7 +62,7 @@ const Resume: FC<{data: IResume}> = ({data}) => {
                     </div>
                 </Fragment>
             )}
-            {data?.jobs.map(j =>
+            {jobs && jobs.map(j =>
                 <Fragment key={j.id}>
                     <h3>Опыт работы</h3>
                     <div className="info-container">

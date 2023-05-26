@@ -11,6 +11,11 @@ export const getResumesByUser = async (userId: number) => {
     return data
 }
 
+export const getResumes = async () => {
+    const {data} = await $host.get(`api/resumes/`)
+    return data
+}
+
 export const createResume = async (resume: IResume) => {
     const {data} = await $host.post(`api/resumes/`, resume)
     return data

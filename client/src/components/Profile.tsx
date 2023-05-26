@@ -16,18 +16,18 @@ import {isAuth} from "../http/userApi";
 const Profile = () => {
     const navigate = useNavigate()
     const user = useAppSelector(state => state.user)
-    const [data, setData] = useState<IResume[] | IVacancy[]>([])
+    const [data, setData] = useState<IResume[] | IVacancy[]>()
 
     useEffect(() => {
         isAuth().then(() => {
-            user?.role == "user"
+            user?.role == "USER"
                 ? getResumesByUser(user.id).then(
                     vals => {
-                        setData(vals)
+                        setData([...vals])
                     })
                 : getVacanciesByUser(user.id).then(
                     vals => {
-                        setData(vals)
+                        setData([...vals])
                     }
                 )
         })
@@ -44,7 +44,7 @@ const Profile = () => {
                         <div>
                             <div className="line">
                                 <div><p>ФИО:</p></div>
-                                <div><p>{user?.lastName} {user?.firstName}</p></div>
+                                <div><p>{user.lastName} {user.firstName}</p></div>
                             </div>
                             {/*<div className="line">*/}
                             {/*    <div><p>Телефон:</p></div>*/}
@@ -59,22 +59,25 @@ const Profile = () => {
                             {/*    <div><p>{user?.birthDay}</p></div>*/}
                             {/*</div>*/}
                             <div className="line">
-                                <Btn text={"Добавить резюме"} onClick={() => {
-                                    navigate("/resume_form")
-                                }}/>
+                                <Btn text={user.role === "USER" ? "Добавить резюме" : "Добавить вакансию"}
+                                     onClick={() => {
+                                         navigate(user.role === "USER" ? "/resume_form" : "/vacancy_form")
+                                     }}/>
                             </div>
                         </div>
                     </Col>
                 </Row>
                 <Row className="resumes">
                     <Col className="col" xs={12} sm={12} style={{display: "flex", justifyContent: "center"}}>
-                        <h1>Мои {user.role == 'user' ? 'резюме' : 'вакансии'}</h1>
+                        <h1>Мои {user.role == 'USER' ? 'резюме' : 'вакансии'}</h1>
                     </Col>
                     <Col className="col" xs={12} sm={12} style={{display: "flex", justifyContent: "center"}}>
-                        <DropDowns titles={data.map(d => d.profession + " - " + d.post)}
-                                   bodies={user?.role == "user"
-                                       ? data.map(d => <Resume data={d as IResume}/>)
-                                       : data.map(d => <Vacancy data={d as IVacancy}/>)
+                        <DropDowns titles={data ? data.map(d => d.profession + " - " + d.post) : []}
+                                   bodies={data
+                                       ? (user.role == "USER"
+                                           ? data.map(d => <Resume key={d.id} data={d as IResume}/>)
+                                           : data.map(d => <Vacancy key={d.id} data={d as IVacancy}/>))
+                                       : []
                                    }/>
                     </Col>
                 </Row>

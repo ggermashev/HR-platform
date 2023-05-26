@@ -10,6 +10,7 @@ import {IEducation, IResume} from "../types/types";
 import {useSelector} from "react-redux";
 import {useAppSelector} from "../hooks/reduxHooks";
 import {createResume} from "../http/resumeApi";
+import {useNavigate} from "react-router-dom";
 
 const ResumeForm = () => {
 
@@ -20,7 +21,7 @@ const ResumeForm = () => {
         profession: "",
         post: "",
         city: "",
-        salary: null,
+        salary: 0,
         education: null,
         workExperience: "",
         universities: [],
@@ -30,6 +31,7 @@ const ResumeForm = () => {
     })
     const [tag, setTag] = useState("")
     const [display, setDisplay] = useState("none")
+    const navigate = useNavigate()
 
     return (
         <div className="resume-form" onClick={() => {
@@ -108,7 +110,7 @@ const ResumeForm = () => {
                                 })
                             }}/>
 
-                            <Input text={"Год окончания"} value={uni.graduationYear?.toString() as string}
+                            <Input text={"Год окончания"} value={uni.graduationYear ? uni.graduationYear.toString() : ""}
                                    setValue={(val) => {
                                        let copy_universities = [...resume.universities]
                                        copy_universities[i].graduationYear = parseInt(val)
@@ -178,7 +180,7 @@ const ResumeForm = () => {
                                 })
                             }}/>
 
-                            <Input text={"Начало работы"} value={j.workFrom?.toString() || ""} setValue={(val) => {
+                            <Input text={"Начало работы"} value={j.workFrom ? j.workFrom.toString() : ""} setValue={(val) => {
                                 let copy_jobs = [...resume.jobs]
                                 copy_jobs[i].workFrom = parseInt(val)
                                 setResume({
@@ -186,7 +188,7 @@ const ResumeForm = () => {
                                     jobs: copy_jobs
                                 })
                             }}/>
-                            <Input text={"Окончание работы"} value={j.workTo?.toString() || ""} setValue={(val) => {
+                            <Input text={"Окончание работы"} value={j.workTo ? j.workTo.toString() : ""} setValue={(val) => {
                                 let copy_jobs = [...resume.jobs]
                                 copy_jobs[i].workTo = parseInt(val)
                                 setResume({
@@ -249,7 +251,9 @@ const ResumeForm = () => {
                     </Container>
                 }
                 <Btn className="publish" text={"Опубликовать резюме"} onClick={() => {
-                    createResume(resume).then()
+                    createResume(resume).then(() => {
+                        navigate('/profile')
+                    })
                 }}/>
             </div>
         </div>

@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import {IUser} from "../types/types";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {isAuth} from "../http/userApi";
-import {clearUser} from "../redux/userSlice";
+import {clearUser, setIsAuth} from "../redux/userSlice";
 
 const Navigation = () => {
     const [active, setActive] = useState(-1)
@@ -15,8 +15,9 @@ const Navigation = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
+        console.log(user)
         isAuth().then(
-            val => {},
+            val => {dispatch(setIsAuth(true))},
             err => {dispatch(clearUser())}
         )
     }, [user])

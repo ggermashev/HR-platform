@@ -12,8 +12,8 @@ import {ICity, IPost, IProfession, IResume, IVacancy, IWorkExperience} from "../
 import Vacancy from "./Vacancy";
 import {useAppSelector} from "../hooks/reduxHooks";
 import gsap from "gsap";
-import {getVacanciesByUser} from "../http/vacancyApi";
-import {getResumesByUser} from "../http/resumeApi";
+import {getVacancies, getVacanciesByUser} from "../http/vacancyApi";
+import {getResumes, getResumesByUser} from "../http/resumeApi";
 import {getPostsByProfession} from "../http/postApi";
 import {getProfessions} from "../http/professionApi";
 import {getWorkExperiences} from "../http/workExperienceApi";
@@ -108,10 +108,10 @@ const Search = () => {
     useEffect(() => {
         console.log(user)
         user?.role == "USER"
-            ? getVacanciesByUser(user.id).then(vals => {
+            ? getVacancies().then(vals => {
                 setCards(vals)
             })
-            : getResumesByUser(user.id).then(vals => {
+            : getResumes().then(vals => {
                 setCards(vals)
             })
     }, [reloadNumber])
@@ -287,7 +287,7 @@ const Search = () => {
                         <Container fluid>
                             <Row>
                                 <div className="card-more-info" ref={moreInfo}>
-                                    {user?.role == "user"
+                                    {user?.role == "USER"
                                         ? <Vacancy data={cards[0] as IVacancy}/>
                                         : <Resume data={cards[0] as IResume}/>
                                     }

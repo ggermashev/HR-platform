@@ -1,15 +1,22 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {IUser} from "../types/types";
+import jwt_decode from "jwt-decode";
 
+
+const token = localStorage.getItem('token')
+let user = {id: -1, role: "", firstName: "", lastName: "", login: "", isAuth: false}
+if (token) {
+    user = jwt_decode(token)
+}
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        id: -1,
-        role: "",
-        firstName: "",
-        lastName: "",
-        login: "",
+        id: user.id,
+        role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        login: user.login,
         isAuth: false
     },
     reducers: {
@@ -28,9 +35,12 @@ const userSlice = createSlice({
             state.lastName = ""
             state.login = ""
             state.isAuth = false
+        },
+        setIsAuth(state, action) {
+            state.isAuth = action.payload
         }
     }
 })
 
 export default userSlice.reducer
-export const {setUser, clearUser} = userSlice.actions
+export const {setUser, clearUser, setIsAuth} = userSlice.actions

@@ -11,6 +11,7 @@ import FormRadio from "../ui/FormRadio";
 import {useSelector} from "react-redux";
 import {useAppSelector} from "../hooks/reduxHooks";
 import {createVacancy} from "../http/vacancyApi";
+import {useNavigate} from "react-router-dom";
 
 const VacancyForm = () => {
 
@@ -22,7 +23,7 @@ const VacancyForm = () => {
         profession: "",
         post: "",
         city: "",
-        salary: null,
+        salary: 0,
         workExperience: "",
         todos: "",
         requirements: "",
@@ -36,6 +37,7 @@ const VacancyForm = () => {
     const [tag, setTag] = useState("")
     const [questions, setQuestions] = useState<IQuestion[]>([])
     const [display, setDisplay] = useState("none")
+    const navigate = useNavigate()
 
     return (
         <div className="vacancy-form" onClick={() => {
@@ -46,6 +48,7 @@ const VacancyForm = () => {
                 <Input text={"Название компании"} value={vacancy.companyName} setValue={s => {
                     setVacancy({...vacancy, companyName: s})
                 }}/>
+                <Input text={"Профессия"} value={vacancy.profession} setValue={s => setVacancy({...vacancy, profession: s})}/>
                 <Input text={"Должность"} value={vacancy.post} setValue={s => setVacancy({...vacancy, post: s})}/>
                 <Input text={"Зарплата"} value={vacancy.salary?.toString() as string} setValue={s => {
                     setVacancy({...vacancy, salary: parseInt(s)})
@@ -150,7 +153,9 @@ const VacancyForm = () => {
                     setQuestions([...questions, {question: "", variants: [], answer: "", vacancyId: 0}])
                 }}/>
                 <Btn className="publish" text={"Опубликовать вакансию"} onClick={() => {
-                    createVacancy(vacancy).then()
+                    createVacancy(vacancy).then(() => {
+                        navigate('/profile')
+                    })
                     // createTest({questions: questions}).then()
                 }}/>
             </div>
