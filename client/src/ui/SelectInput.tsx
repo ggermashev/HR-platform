@@ -5,7 +5,7 @@ import "./css/SelectInput.css"
 interface IInput {
     default_: string,
     options: string[],
-    setValue: (s: string) => void
+    setValue: (s: any) => void
 }
 
 const SelectInput: FC<IInput> = ( {default_, options, setValue}) => {

@@ -4,8 +4,9 @@ import "./css/Contact.css"
 import {useDispatch, useSelector} from "react-redux";
 import {setChatId} from "../redux/activeChatSlice";
 import {setTestId} from "../redux/activeTestSlice";
-import {getResume, getUser, getVacancy} from "../api/Api";
 import {IResume, IUser, IVacancy} from "../types/types";
+import {getContact} from "../http/contactApi";
+import {getResume} from "../http/resumeApi";
 
 interface IContact {
     click: (e: any) => void,
@@ -26,9 +27,12 @@ const Contact: FC<IContact> = ({id, click, contactId, lastMsg}) => {
 
     useEffect(() => {
         user.role == 'user'
-            ?   getVacancy(contactId).then(val => setContact(val))
-            :   getResume(contactId).then(val => setContact(val))
-
+            ? getContact(contactId).then(val => {
+                getResume(val.id).then(val => setContact(val))
+            })
+            : getContact(contactId).then(val => {
+                getResume(val.id).then(val => setContact(val))
+            })
     })
 
     return (

@@ -2,12 +2,13 @@
 export interface IQuestion {
     id?: number;
     question: string;
-    variants: string[];
     answer: string;
+    variants: string[],//
     vacancyId: number,
 }
 
 export interface IAnswerVariant {
+    id?: number,
     variant: string,
     questionId: number
 }
@@ -63,7 +64,7 @@ export interface IUniversity {
 }
 
 export interface IProfession {
-    id?: number,
+    id: number,
     profession: string
 }
 
@@ -98,9 +99,9 @@ export interface IJob {
     profession: string,
     post: string,
     todos: string,
-    workFrom: number,
-    workTo: number,
-    resumeId: number
+    workFrom: number | null,
+    workTo: number | null,
+    resumeId: number | null
 }
 
 export interface IResume {
@@ -133,6 +134,7 @@ export interface IVacancy {
     offer: string,
     skills: string[],
     questions: IQuestion[],
+    answerVariants: IAnswerVariant[]
 }
 
 

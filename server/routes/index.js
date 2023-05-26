@@ -20,7 +20,7 @@ const resumeSkillsRouter = require('./resumeSkillsRouter')
 const vacancySkillsRouter = require('./vacancySkillsRouter')
 
 router.use('/professions', professionRouter)
-router.use('/user', userRouter)
+router.use('/users', userRouter)
 router.use('/posts', postRouter)
 router.use('/educations', educationRouter)
 router.use('/work_experiences', workExperienceRouter)

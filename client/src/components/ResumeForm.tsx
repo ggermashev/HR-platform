@@ -8,15 +8,15 @@ import TextInput from "../ui/TextInput";
 import FormRadio from "../ui/FormRadio";
 import {IEducation, IResume} from "../types/types";
 import {useSelector} from "react-redux";
-import {createResume} from "../api/Api";
 import {useAppSelector} from "../hooks/reduxHooks";
+import {createResume} from "../http/resumeApi";
 
 const ResumeForm = () => {
 
     const user = useAppSelector(state => state.user)
     const educations = ['Среднее', 'Среднее специальное', 'Неоконченное высшее', 'Высшее', 'Бакалавр', 'Магистр', 'Кандидат наук', 'Доктор наук']
     const [resume, setResume] = useState<IResume>({
-        ownerId: user?.id,
+        userId: user?.id,
         profession: "",
         post: "",
         city: "",
@@ -68,8 +68,9 @@ const ResumeForm = () => {
                                         post: "",
                                         profession: "",
                                         todos: "",
-                                        workFrom: "",
-                                        workTo: ""
+                                        workFrom: null,
+                                        workTo: null,
+                                        resumeId: null
                                     }],
                                     education: e.target.value
                                 })
@@ -177,17 +178,17 @@ const ResumeForm = () => {
                                 })
                             }}/>
 
-                            <Input text={"Начало работы"} value={j.workFrom} setValue={(val) => {
+                            <Input text={"Начало работы"} value={j.workFrom?.toString() || ""} setValue={(val) => {
                                 let copy_jobs = [...resume.jobs]
-                                copy_jobs[i].workFrom = val
+                                copy_jobs[i].workFrom = parseInt(val)
                                 setResume({
                                     ...resume,
                                     jobs: copy_jobs
                                 })
                             }}/>
-                            <Input text={"Окончание работы"} value={j.workTo} setValue={(val) => {
+                            <Input text={"Окончание работы"} value={j.workTo?.toString() || ""} setValue={(val) => {
                                 let copy_jobs = [...resume.jobs]
-                                copy_jobs[i].workTo = val
+                                copy_jobs[i].workTo = parseInt(val)
                                 setResume({
                                     ...resume,
                                     jobs: copy_jobs
@@ -217,7 +218,7 @@ const ResumeForm = () => {
                 {resume.education &&
                     <Btn text={"Добавить опыт работы"} onClick={() => {
                         const copy_jobs = [...resume.jobs]
-                        copy_jobs.push({companyName: "", profession: "", post: "", todos: "", workFrom: "", workTo: ""})
+                        copy_jobs.push({companyName: "", profession: "", post: "", todos: "", workFrom: null, workTo: null, resumeId: null})
                         setResume({
                             ...resume,
                             jobs: copy_jobs

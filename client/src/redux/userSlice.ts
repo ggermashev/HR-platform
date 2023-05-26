@@ -5,11 +5,12 @@ import {IUser} from "../types/types";
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        id: null,
+        id: -1,
         role: "",
         firstName: "",
         lastName: "",
         login: "",
+        isAuth: false
     },
     reducers: {
         setUser(state, action) {
@@ -18,13 +19,15 @@ const userSlice = createSlice({
             state.firstName = action.payload.firstName
             state.lastName = action.payload.lastName
             state.login = action.payload.login
+            state.isAuth = true
         },
         clearUser(state) {
-            state.id = null
+            state.id = -1
             state.role = ""
             state.firstName = ""
             state.lastName = ""
             state.login = ""
+            state.isAuth = false
         }
     }
 })

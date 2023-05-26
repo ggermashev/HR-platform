@@ -6,22 +6,19 @@ import RangeInput from "../ui/RangeInput";
 import Card from "./Card";
 import Btn from "../ui/Btn";
 import Resume from "./Resume";
-import {
-    getCities,
-    getPosts,
-    getProfessions,
-    getResume,
-    getResumes,
-    getVacancies,
-    getWorkExperiences,
-    setLike
-} from "../api/Api";
+
 import {setExperiences} from "../redux/experiencesSlice";
 import {ICity, IPost, IProfession, IResume, IVacancy, IWorkExperience} from "../types/types";
-import {useSelector} from "react-redux";
 import Vacancy from "./Vacancy";
 import {useAppSelector} from "../hooks/reduxHooks";
 import gsap from "gsap";
+import {getVacanciesByUser} from "../http/vacancyApi";
+import {getResumesByUser} from "../http/resumeApi";
+import {getPostsByProfession} from "../http/postApi";
+import {getProfessions} from "../http/professionApi";
+import {getWorkExperiences} from "../http/workExperienceApi";
+import {getCities} from "../http/cityApi";
+import {setLike} from "../http/likeApi";
 
 const Search = () => {
     const [professions, setProfessions] = useState([] as IProfession[])
@@ -35,8 +32,8 @@ const Search = () => {
     const [likeHover, setLikeHover] = useState(false)
     const [dislikeHover, setDislikeHover] = useState(false)
 
-    const [profession, setProfession] = useState("")
-    const [post, setPost] = useState("")
+    const [profession, setProfession] = useState<IProfession>()
+    const [post, setPost] = useState<IPost | null>(null)
     const [city, setCity] = useState("")
     const [experience, setExperience] = useState("")
     const [salaryFrom, setSalaryFrom] = useState("0")
@@ -109,21 +106,26 @@ const Search = () => {
     }, [])
 
     useEffect(() => {
-        user?.role == "user"
-            ? getVacancies().then(vals => {
+        console.log(user)
+        user?.role == "USER"
+            ? getVacanciesByUser(user.id).then(vals => {
                 setCards(vals)
             })
-            : getResumes().then(vals => {
+            : getResumesByUser(user.id).then(vals => {
                 setCards(vals)
             })
     }, [reloadNumber])
 
     useEffect(() => {
-        getPosts(profession).then(
-            vals => {
-                setPosts(vals)
-            }
-        )
+        if (profession) {
+            getPostsByProfession(profession.id).then(
+                vals => {
+                    setPosts(vals)
+                }
+            )
+        } else {
+            setPost(null)
+        }
     }, [profession])
 
     return (

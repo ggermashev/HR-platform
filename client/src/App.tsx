@@ -16,30 +16,34 @@ import VacancyForm from "./components/VacancyForm";
 import {useSelector} from "react-redux";
 import {isAuth} from "./http/userApi";
 import {useAppDispatch, useAppSelector} from "./hooks/reduxHooks";
-import {setIsAuthenticated} from "./redux/isAuthenticatedSlice";
+import {clearUser} from "./redux/userSlice";
 
 function App() {
     // @ts-ignore
     const user = useSelector(state => state.user)
-    const isAuthenticated = useAppSelector(state => state.isAuthenticated)
     const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        isAuth().then(val => {},
+            err => {dispatch(clearUser())})
+    }, [user])
 
     return (
         <Fragment>
             <Navigation/>
-                <main>
-                    <Routes>
-                        <Route path="/" element={<About/>}/>
-                        {isAuthenticated.auth && <Route path="/profile" element={<Profile/>}/>}
-                        {isAuthenticated.auth && <Route path="/vacancy_form" element={<VacancyForm/>}/>}
-                        {isAuthenticated.auth && <Route path="/matches" element={<Matches/>}/>}
-                        {isAuthenticated.auth && <Route path="/resume_form" element={<ResumeForm/>}/>}
-                        <Route path="/search" element={<Search/>}/>
-                        {!isAuthenticated.auth && <Route path="/login" element={<Login/>}/>}
-                        {!isAuthenticated.auth && <Route path="/registration" element={<Registration/>}/>}
-                        {isAuthenticated.auth && <Route path="/logout" element={<Logout/>}/>}
-                    </Routes>
-                </main>
+            <main>
+                <Routes>
+                    <Route path="/" element={<About/>}/>
+                    {user.isAuth && <Route path="/profile" element={<Profile/>}/>}
+                    {user.isAuth && <Route path="/vacancy_form" element={<VacancyForm/>}/>}
+                    {user.isAuth && <Route path="/matches" element={<Matches/>}/>}
+                    {user.isAuth && <Route path="/resume_form" element={<ResumeForm/>}/>}
+                    <Route path="/search" element={<Search/>}/>
+                    {!user.isAuth && <Route path="/login" element={<Login/>}/>}
+                    {!user.isAuth && <Route path="/registration" element={<Registration/>}/>}
+                    {user.isAuth && <Route path="/logout" element={<Logout/>}/>}
+                </Routes>
+            </main>
             <Footer/>
         </Fragment>
     );

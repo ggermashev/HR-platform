@@ -7,9 +7,11 @@ import Resume from "./Resume";
 import DropDowns from "../ui/DropDowns";
 import {useSelector} from "react-redux";
 import {IResume, IUser, IVacancy} from "../types/types";
-import {getResumes, getVacancies} from "../api/Api";
 import Vacancy from "./Vacancy";
 import {useAppSelector} from "../hooks/reduxHooks";
+import {getResumesByUser} from "../http/resumeApi";
+import {getVacanciesByUser} from "../http/vacancyApi";
+import {isAuth} from "../http/userApi";
 
 const Profile = () => {
     const navigate = useNavigate()
@@ -17,17 +19,18 @@ const Profile = () => {
     const [data, setData] = useState<IResume[] | IVacancy[]>([])
 
     useEffect(() => {
-        // user?.role == "user"
-        //     ? getResumes(user?.key).then(
-        //         vals => {
-        //             setData(vals)
-        //         })
-        //     : getVacancies(user?.key).then(
-        //         vals => {
-        //             setData(vals)
-        //         }
-        //     )
-
+        isAuth().then(() => {
+            user?.role == "user"
+                ? getResumesByUser(user.id).then(
+                    vals => {
+                        setData(vals)
+                    })
+                : getVacanciesByUser(user.id).then(
+                    vals => {
+                        setData(vals)
+                    }
+                )
+        })
     }, [])
 
     return (
@@ -72,7 +75,7 @@ const Profile = () => {
                                    bodies={user?.role == "user"
                                        ? data.map(d => <Resume data={d as IResume}/>)
                                        : data.map(d => <Vacancy data={d as IVacancy}/>)
-                        }/>
+                                   }/>
                     </Col>
                 </Row>
             </Container>

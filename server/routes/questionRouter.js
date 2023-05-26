@@ -1,8 +1,7 @@
 const Router = require('express')
 const router = new Router()
+const QuestionController = require('../controllers/questionController')
 
-router.get('/:vacancyId',)
-router.post('/',)
-router.put('/:questionId')
+router.get('/:vacancyId', QuestionController.getByVacancy)
 
 module.exports = router

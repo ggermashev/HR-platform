@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Col, Container, Row} from "react-bootstrap";
 import Input from "../ui/Input";
 import Btn from "../ui/Btn";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import "./css/Login.css"
 import {IUser} from "../types/types";
 import {registration} from "../http/userApi";
@@ -18,6 +18,7 @@ const Registration = () => {
         role: "USER"
     })
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     return (
         <div>
             <div className="login">
@@ -31,7 +32,7 @@ const Registration = () => {
                                 <Input text={"Почта"} value={user.login} setValue={(s) => {setUser({...user, login: s})}}/>
                                 <Input text={"Пароль"}value={user.password} setValue={(s) => {setUser({...user, password: s})}}/>
                                 <Btn text={"Зарегистрироваться"} onClick={() => {
-                                    registration(user).then()
+                                    registration(user).then(val => {navigate('/login')})
                                 }}/>
                             </div>
                         </Col>

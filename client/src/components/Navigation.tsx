@@ -6,15 +6,21 @@ import {useSelector} from "react-redux";
 import {IUser} from "../types/types";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {isAuth} from "../http/userApi";
-import {setIsAuthenticated} from "../redux/isAuthenticatedSlice";
 import {clearUser} from "../redux/userSlice";
 
 const Navigation = () => {
     const [active, setActive] = useState(-1)
-    const isAuthenticated = useAppSelector(state => state.isAuthenticated)
     const user = useAppSelector(state => state.user)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        isAuth().then(
+            val => {},
+            err => {dispatch(clearUser())}
+        )
+    }, [user])
+
     return (
         <Navbar collapseOnSelect expand="md">
             <Container fluid>
@@ -26,18 +32,16 @@ const Navigation = () => {
                             платформе</Nav.Link>
                         <Nav.Link active={active == 1} onClick={e => setActive(1)} as={Link}
                                   to="/search">Поиск</Nav.Link>
-                        {isAuthenticated.auth && <Nav.Link active={active == 2} onClick={e => setActive(2)} as={Link}
+                        {user.isAuth && <Nav.Link active={active == 2} onClick={e => setActive(2)} as={Link}
                                              to="/profile">Профиль</Nav.Link>}
-                        {isAuthenticated.auth && <Nav.Link active={active == 3} onClick={e => setActive(3)} as={Link}
+                        {user.isAuth && <Nav.Link active={active == 3} onClick={e => setActive(3)} as={Link}
                                              to="/matches">Мэтчи</Nav.Link>}
                     </Nav>
                     <Nav>
-                        {isAuthenticated.auth
-                            ? <Nav.Link as={Link} to="#" onClick={() => {
+                        {user.isAuth
+                            ? <Nav.Link as={Link} to="/login" onClick={() => {
                                 localStorage.removeItem('token')
                                 dispatch(clearUser())
-                                dispatch(setIsAuthenticated(false))
-                                navigate("/login")
                             }
                             }>Выход</Nav.Link>
                             : <><Nav.Link as={Link} to="/registration">Регистрация</Nav.Link><Nav.Link as={Link} to="/login">Вход</Nav.Link></>

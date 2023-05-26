@@ -130,56 +130,62 @@ const VacancySkills = sequelize.define('vacancy_skills', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
-Question.hasMany(AnswerVariant)
-AnswerVariant.belongsTo(Question)
-Vacancy.hasMany(Question)
-Question.belongsTo(Vacancy)
+Question.hasMany(AnswerVariant, {
+    onDelete: 'CASCADE'
+})
+Vacancy.hasMany(Question, {
+    onDelete: 'CASCADE'
+})
 
 
-Profession.hasMany(Post)
-Post.belongsTo(Profession)
+Profession.hasMany(Post, {
+    onDelete: 'CASCADE'
+})
 
 
-Resume.hasMany(Contact)
-Contact.belongsTo(Resume)
-Vacancy.hasMany(Contact)
-Contact.belongsTo(Vacancy)
-Contact.hasMany(Message)
-Message.belongsTo(Contact)
+Resume.hasMany(Contact, {
+    onDelete: 'CASCADE'
+})
+Vacancy.hasMany(Contact, {
+    onDelete: 'CASCADE'
+})
+Contact.hasMany(Message, {
+    onDelete: 'CASCADE'
+})
 
 User.hasMany(Message, {
-    foreignKey: 'userIdFrom'
-})
-Message.belongsTo(User, {
-    foreignKey: 'userIdFrom'
+    foreignKey: 'userIdFrom',
+    onDelete: 'CASCADE'
 })
 User.hasMany(Message, {
-    foreignKey: 'userIdTo'
-})
-Message.belongsTo(User, {
-    foreignKey: 'userIdTo'
+    foreignKey: 'userIdTo',
+    onDelete: 'CASCADE'
 })
 
-Resume.hasMany(Like)
-Like.belongsTo(Resume)
-Vacancy.hasMany(Like)
-Like.belongsTo(Vacancy)
+Resume.hasMany(Like, {
+    onDelete: 'CASCADE'
+})
+Vacancy.hasMany(Like, {
+    onDelete: 'CASCADE'
+})
 
-Resume.hasMany(University)
-University.belongsTo(Resume)
+Resume.hasMany(University, {
+    onDelete: 'CASCADE'
+})
 
-Resume.hasMany(Job)
-Job.belongsTo(Resume)
+Resume.hasMany(Job, {
+    onDelete: 'CASCADE'
+})
 
-User.hasMany(Resume)
-Resume.belongsTo(User)
-Resume.belongsToMany(Skill, {through: ResumeSkills})
-Skill.belongsToMany(Resume, {through: ResumeSkills})
+User.hasMany(Resume, {
+    onDelete: 'CASCADE'
+})
+Resume.belongsToMany(Skill, {through: ResumeSkills, onDelete: 'RESTRICT'})
+Skill.belongsToMany(Resume, {through: ResumeSkills, onDelete: 'CASCADE'})
 
 User.hasMany(Vacancy)
-Vacancy.belongsTo(User)
-Vacancy.belongsToMany(Skill, {through: VacancySkills})
-Skill.belongsToMany(Vacancy, {through: VacancySkills})
+Vacancy.belongsToMany(Skill, {through: VacancySkills, onDelete: 'RESTRICT'})
+Skill.belongsToMany(Vacancy, {through: VacancySkills, onDelete: 'CASCADE'})
 
 
 module.exports = {

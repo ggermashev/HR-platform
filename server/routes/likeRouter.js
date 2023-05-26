@@ -1,9 +1,7 @@
 const Router = require('express')
 const router = new Router()
+const LikeController = require('../controllers/likeController')
 
-router.get('/by_vacancy/:vacancyId',)
-router.get('/by_resume/:resumeId',)
-router.post('/',)
-router.delete('/:likeId')
+router.post('/', LikeController.set)
 
 module.exports = router

@@ -10,14 +10,14 @@ import {IQuestion, IVacancy} from "../types/types";
 import FormRadio from "../ui/FormRadio";
 import {useSelector} from "react-redux";
 import {useAppSelector} from "../hooks/reduxHooks";
-import {createTest, createVacancy} from "../api/Api";
+import {createVacancy} from "../http/vacancyApi";
 
 const VacancyForm = () => {
 
     const user = useAppSelector(state => state.user)
     const experiences = useAppSelector(state => state.experiences)
     const [vacancy, setVacancy] = useState<IVacancy>({
-        ownerId: user.id,
+        userId: user.id,
         companyName: "",
         profession: "",
         post: "",
@@ -29,6 +29,8 @@ const VacancyForm = () => {
         desirable: "",
         offer: "",
         skills: [],
+        questions: [],
+        answerVariants: []
     })
 
     const [tag, setTag] = useState("")
@@ -145,11 +147,11 @@ const VacancyForm = () => {
                 )}
 
                 <Btn text={"Добавить тестовый вопрос"} onClick={() => {
-                    setQuestions([...questions, {question: "", variants: [], answer: ""}])
+                    setQuestions([...questions, {question: "", variants: [], answer: "", vacancyId: 0}])
                 }}/>
                 <Btn className="publish" text={"Опубликовать вакансию"} onClick={() => {
                     createVacancy(vacancy).then()
-                    createTest({questions: questions}).then()
+                    // createTest({questions: questions}).then()
                 }}/>
             </div>
         </div>

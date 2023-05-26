@@ -9,7 +9,8 @@ import {setChatId} from "../redux/activeChatSlice";
 import Test from "./Test";
 import {setTestId} from "../redux/activeTestSlice";
 import {IContact} from "../types/types";
-import {getContacts} from "../api/Api";
+import {getResumesByUser} from "../http/resumeApi";
+import {getContactsByResume} from "../http/contactApi";
 
 const Matches = () => {
     const chat = useRef(null)
@@ -21,8 +22,20 @@ const Matches = () => {
     const [contacts, setContacts] = useState<IContact[]>([])
 
     useEffect(() => {
-        getContacts(user?.id).then(vals => {
-                setContacts(vals)
+        user.role === 'USER'
+            ? getResumesByUser(user.id).then(vals => {
+                for (let v of vals) {
+                    getContactsByResume(v.id).then(vals => {
+                        setContacts([...contacts, vals])
+                    })
+                }
+            })
+            : getResumesByUser(user.id).then(vals => {
+                for (let v of vals) {
+                    getContactsByResume(v.id).then(vals => {
+                        setContacts([...contacts, vals])
+                    })
+                }
             })
     }, [])
 
@@ -33,7 +46,7 @@ const Matches = () => {
                     <Col className="col contacts" xs={12} sm={12} md={4} ref={contactsRef}>
                         {contacts.map(c =>
                             <Contact id={c.id as number} contactId={user.role == "user" ? c.idVacancy : c.idResume}
-                                     lastMsg={c.messages.at(-1)?.message as string} click={(e) => {
+                                     lastMsg={"msg"} click={(e) => {
                                 //@ts-ignore
                                 chat.current.style.display = "block"
                                 //@ts-ignore

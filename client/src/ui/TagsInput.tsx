@@ -3,7 +3,7 @@ import "./css/TagsInput.css"
 import {Form, InputGroup} from "react-bootstrap";
 import Btn from "./Btn";
 import TagsContainer from "./TagsContainer";
-import {getSimilarSkills} from "../api/Api";
+import {getSkills} from "../http/skillApi";
 
 interface ITagsInput {
     text: string,
@@ -19,9 +19,9 @@ const TagsInput: FC<ITagsInput> = ({text, value, setValue, display, setDisplay, 
     const [choice, setChoice] = useState<string[]>([])
 
     useEffect(() => {
-        getSimilarSkills(value).then(
-            val => {
-                setChoice(val)
+        getSkills().then(
+            vals => {
+                setChoice(vals)
             })
     }, [value])
 
