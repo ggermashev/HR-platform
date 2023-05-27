@@ -31,7 +31,7 @@ const Registration = () => {
                                 <Input text={"Имя"} value={user.firstName} setValue={(s) => {setUser({...user, firstName: s})}}/>
                                 <Input text={"Фамилия"}value={user.lastName} setValue={(s) => {setUser({...user, lastName: s})}}/>
                                 <Input text={"Почта"} value={user.login} setValue={(s) => {setUser({...user, login: s})}}/>
-                                <Input text={"Пароль"}value={user.password} setValue={(s) => {setUser({...user, password: s})}}/>
+                                <Input type={"password"} text={"Пароль"}value={user.password} setValue={(s) => {setUser({...user, password: s})}}/>
                                 <SelectInput default_={"Роль"} options={["USER", "HR"]} setValue={s => {setUser({...user, role: s})}}/>
                                 <Btn text={"Зарегистрироваться"} onClick={() => {
                                     registration(user).then(val => {navigate('/login')})

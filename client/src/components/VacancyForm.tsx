@@ -6,12 +6,13 @@ import {Button, Col, Container, Image, Row} from "react-bootstrap";
 import TagsInput from "../ui/TagsInput";
 import SelectInput from "../ui/SelectInput";
 import Btn from "../ui/Btn";
-import {IQuestion, IVacancy} from "../types/types";
+import {IAnswerVariant, IQuestion, IVacancy} from "../types/types";
 import FormRadio from "../ui/FormRadio";
 import {useSelector} from "react-redux";
 import {useAppSelector} from "../hooks/reduxHooks";
 import {createVacancy} from "../http/vacancyApi";
 import {useNavigate} from "react-router-dom";
+import resume from "./Resume";
 
 const VacancyForm = () => {
 
@@ -31,11 +32,10 @@ const VacancyForm = () => {
         offer: "",
         skills: [],
         questions: [],
-        answerVariants: []
+        // answerVariants: []
     })
 
     const [tag, setTag] = useState("")
-    const [questions, setQuestions] = useState<IQuestion[]>([])
     const [display, setDisplay] = useState("none")
     const navigate = useNavigate()
 
@@ -83,28 +83,29 @@ const VacancyForm = () => {
                     </Row>
                 </Container>
 
-                {questions.map((q, i) =>
-                    <div style={{display: "flex", flexDirection: "row", justifyContent: "top", width: "100%"}}>
+                {vacancy.questions.map((q, i) =>
+                    <div key={q.id} style={{display: "flex", flexDirection: "row", justifyContent: "top", width: "100%"}}>
                         <div style={{width: "100%"}}>
                             <TextInput value={q.question} setValue={(val) => {
-                                let copy_questions = [...questions]
+                                let copy_questions = [...vacancy.questions]
                                 copy_questions[i].question = val
-                                setQuestions(copy_questions)
+                                setVacancy({...vacancy, questions: copy_questions})
                             }} label={"Вопрос"}/>
                             <FormRadio name={"variants"}
                                        variants={
                                            q.variants.map((v, j) =>
                                                <div key={j} style={{display: "flex", flexDirection: "row"}}>
-                                                   <Input text={"Вариант ответа"} value={v} setValue={val => {
-                                                       let copy_questions = [...questions]
-                                                       copy_questions[i].variants[j] = val
-                                                       setQuestions(copy_questions)
+                                                   <Input text={"Вариант ответа"} value={v.variant} setValue={val => {
+                                                       let copy_questions = [...vacancy.questions]
+                                                       copy_questions[i].variants[j].variant = val
+                                                       setVacancy({...vacancy, questions: copy_questions})
+
                                                    }}/>
                                                    <Image className="delete-img" src={require("../images/delete.png")}
                                                           onClick={() => {
-                                                              let copy_questions = [...questions]
+                                                              let copy_questions = [...vacancy.questions]
                                                               copy_questions[i].variants = copy_questions[i].variants.filter((vr, k) => j != k)
-                                                              setQuestions(copy_questions)
+                                                              setVacancy({...vacancy, questions: copy_questions})
                                                           }}
                                                           onMouseOver={(e) => {
                                                               //@ts-ignore
@@ -118,23 +119,23 @@ const VacancyForm = () => {
                                                </div>
                                            )
                                        }
-                                       values={q.variants}
+                                       values={q.variants.map(variant => variant.variant)}
                                        onChange={(e) => {
-                                           let copy_questions = [...questions]
-                                           copy_questions[i].answer = e.target.id
-                                           setQuestions(copy_questions)
+                                           let copy_questions = [...vacancy.questions]
+                                           copy_questions[i].answer = e.target.value
+                                           setVacancy({...vacancy, questions: copy_questions})
                                        }}/>
                             <Btn className="add-variant" text={"Добавить вариант ответа"} onClick={() => {
-                                let copy_questions = [...questions]
-                                copy_questions[i].variants.push("")
-                                setQuestions(copy_questions)
+                                let copy_questions = [...vacancy.questions]
+                                copy_questions[i].variants.push({questionId: q.id as number, variant: ""})
+                                setVacancy({...vacancy, questions: copy_questions})
                             }
                             }/>
                         </div>
                         <div>
                             <Image className="delete-img" src={require("../images/delete.png")}
                                    onClick={() => {
-                                       setQuestions(questions.filter(quest => quest != q))
+                                       setVacancy({...vacancy, questions: vacancy.questions.filter(quest => quest != q)})
                                    }}
                                    onMouseOver={(e) => {
                                        //@ts-ignore
@@ -150,13 +151,14 @@ const VacancyForm = () => {
                 )}
 
                 <Btn text={"Добавить тестовый вопрос"} onClick={() => {
-                    setQuestions([...questions, {question: "", variants: [], answer: "", vacancyId: 0}])
+                    setVacancy({...vacancy, questions: [...vacancy.questions, {question: "", variants: [], answer: ""}]})
+                    // setQuestions([...questions, {question: "", variants: [], answer: "", vacancyId: 0}])
                 }}/>
                 <Btn className="publish" text={"Опубликовать вакансию"} onClick={() => {
+                    console.log(vacancy.questions)
                     createVacancy(vacancy).then(() => {
                         navigate('/profile')
                     })
-                    // createTest({questions: questions}).then()
                 }}/>
             </div>
         </div>

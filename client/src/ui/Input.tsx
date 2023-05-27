@@ -1,21 +1,24 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {Form, InputGroup} from "react-bootstrap";
 import "./css/Input.css"
 
-const Input = (
-    props: {
-        text: string,
-        value: string,
-        setValue: (s: string) => void
-    }) => {
+interface IInput {
+    text: string,
+    value: string,
+    setValue: (s: string) => void,
+    type?: "text" | "password"
+}
+
+const Input: FC<IInput> = ({text, value, setValue, type="text"}) => {
 
     return (
         <InputGroup className="mb-3">
-            <InputGroup.Text className="input-text" id="basic-addon">{props.text}</InputGroup.Text>
+            <InputGroup.Text className="input-text" id="basic-addon">{text}</InputGroup.Text>
             <Form.Control
                 aria-describedby="basic-addon"
-                value={props.value}
-                onChange={e => {props.setValue(e.target.value)}}
+                value={value}
+                onChange={e => {setValue(e.target.value)}}
+                type={type}
             />
         </InputGroup>
     );

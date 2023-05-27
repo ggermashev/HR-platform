@@ -3,14 +3,14 @@ export interface IQuestion {
     id?: number;
     question: string;
     answer: string;
-    variants: string[],//
-    vacancyId: number,
+    variants: IAnswerVariant[],//
+    vacancyId?: number,
 }
 
 export interface IAnswerVariant {
     id?: number,
     variant: string,
-    questionId: number
+    questionId?: number
 }
 
 export interface IContact {
@@ -140,7 +140,7 @@ export interface IVacancy {
     offer: string,
     skills: string[],
     questions: IQuestion[],
-    answerVariants: IAnswerVariant[],
+    // answerVariants: IAnswerVariant[],
     createdAt?: string,
     updatedAt?: string,
 }

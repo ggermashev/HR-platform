@@ -12,10 +12,14 @@ import {getMessages, sendMessage} from "../http/messageApi";
 import {getVacancy} from "../http/vacancyApi";
 import {getResume} from "../http/resumeApi";
 import {useAppSelector} from "../hooks/reduxHooks";
+import {io, Socket} from "socket.io-client";
+import {DefaultEventsMap} from '@socket.io/component-emitter';
+import {socket} from "../App";
 
 interface IChat {
     onBack?: () => void,
 }
+
 
 const Chat: FC<IChat> = ({onBack}) => {
     const [msg, setMsg] = useState("")
@@ -26,17 +30,35 @@ const Chat: FC<IChat> = ({onBack}) => {
     const user = useAppSelector(state => state.user)
     const [receiverId, setReceiverId] = useState<number>(-1)
 
-    const socket = new WebSocket('ws://localhost:5000/')
+    // const socket = new WebSocket('ws://localhost:5000/')
+    // socket.onmessage = (event) => {
+    //     const [chatId, userIdFrom, userIdTo] = event.data.split(' ')
+    //     console.log("socket")
+    //     if (userIdFrom == user.id || userIdTo == user.id) {
+    //         console.log(user.id)
+    //         getMessages(chatId).then(vals => {
+    //             setMessages(vals)
+    //         })
+    //     }
+    // }
 
-    socket.onmessage = (event) => {
-        const [chatId, userIdFrom, userIdTo] = event.data.split(' ')
-        if (userIdFrom == user.id || userIdTo == user.id) {
-            console.log(user.id)
-            getMessages(chatId).then(vals => {
-                setMessages(vals)
-            })
+    useEffect(() => {
+        function onMessage(msg: string) {
+            const [chatId, userIdFrom, userIdTo] = msg.split(' ')
+            console.log(msg)
+            if (parseInt(userIdFrom) == user.id || parseInt(userIdTo) == user.id) {
+                getMessages(parseInt(chatId)).then(vals => {
+                    setMessages(vals)
+                })
+            }
         }
-    }
+
+        socket.on('chat message', onMessage)
+
+        return () => {
+            socket.off('chat message', onMessage)
+        }
+    }, [])
 
     useEffect(() => {
         if (chatId !== -1) {
@@ -55,6 +77,7 @@ const Chat: FC<IChat> = ({onBack}) => {
                 }
             })
         }
+
     }, [chatId])
 
     return (
@@ -90,7 +113,7 @@ const Chat: FC<IChat> = ({onBack}) => {
                         <Input text={"Сообщение"} value={msg} setValue={setMsg}/>
                         <Btn style={{marginBottom: "20px"}} text={"отправить"} onClick={() => {
                             sendMessage(msg, user.id, receiverId as number, chatId).then(val => {
-                                socket.send(val.id)
+                                socket.emit('chat message', val.id)
                                 setMsg("")
                             })
                         }}/>

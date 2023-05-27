@@ -5,6 +5,7 @@
   padding-top: 60px;
   padding-bottom: 50px;
   overflow-y: auto;
+  background-color: #C1C8E4 !important;
 }
 .chat .head {
   top: 0;
@@ -43,6 +44,7 @@
   height: 100%;
   width: 100%;
   overflow-y: auto;
+  background-color: #C1C8E4;
 }
 .chat .messages .my {
   float: right;

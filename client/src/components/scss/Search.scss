@@ -9,6 +9,7 @@
     align-items: center;
     position: relative;
     padding: 0;
+    height: 100%;
 
     .filter {
       max-width: 200px;
@@ -44,11 +45,9 @@
 
   .cards {
     background-color: #C1C8E4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
     padding: 0;
+    height: 90vh;
+    position: relative;
 
     .dislike {
       height: 90vh;

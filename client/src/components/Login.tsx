@@ -36,7 +36,7 @@ const Login = () => {
                         <div className="login-form">
                             <h1>Вход</h1>
                             <Input text={"Почта"} value={login_} setValue={setLogin}/>
-                            <Input text={"Пароль"} value={password} setValue={setPassword}/>
+                            <Input type={"password"} text={"Пароль"} value={password} setValue={setPassword}/>
                             <Btn text={"Войти"} onClick={() => {
                                 login(login_, password).then(
                                     val => {

@@ -17,6 +17,10 @@ import {useSelector} from "react-redux";
 import {isAuth} from "./http/userApi";
 import {useAppDispatch, useAppSelector} from "./hooks/reduxHooks";
 import {clearUser, setIsAuth} from "./redux/userSlice";
+import {getMessages} from "./http/messageApi";
+import {io} from "socket.io-client";
+
+export const socket = io("http://localhost:4000");
 
 function App() {
     // @ts-ignore

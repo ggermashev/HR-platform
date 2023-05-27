@@ -24,31 +24,28 @@ const Matches = () => {
 
     useEffect(() => {
         user.role === 'USER'
-            ? getResumesByUser(user.id).then(vals1 => {
-                console.log(vals1)
-                const copy_contacts: IContact[] = []
-                for (let v of vals1) {
-                    getContactsByResume(v.id).then(vals2 => {
-                        console.log(vals2)
-                        for (let contact of vals2) {
-                            console.log(contact)
-                            copy_contacts.push(contact)
-                            setContacts(copy_contacts)
+            ? getResumesByUser(user.id).then(resumes => {
+                const new_contacts: IContact[] = []
+                Promise.all(resumes.map((resume: { id: number; }) => getContactsByResume(resume.id))).then(contactss => {
+                    for (let contacts of contactss) {
+                        for (let contact of contacts) {
+                            new_contacts.push(contact)
                         }
-                    })
-                }
+                    }
+                    setContacts(new_contacts)
+                })
             })
             :
-            getVacanciesByUser(user.id).then(vals1 => {
-                const copy_contacts: IContact[] = []
-                for (let v of vals1) {
-                    getContactsByVacancy(v.id).then(vals2 => {
-                        for (let contact of vals2) {
-                            copy_contacts.push(contact)
-                            setContacts(copy_contacts)
+            getVacanciesByUser(user.id).then(vacs => {
+                const new_contacts: IContact[] = []
+                Promise.all(vacs.map((vac: { id: number; }) => getContactsByVacancy(vac.id))).then(contactss => {
+                    for (let contacts of contactss) {
+                        for (let contact of contacts) {
+                            new_contacts.push(contact)
                         }
-                    })
-                }
+                    }
+                    setContacts(new_contacts)
+                })
             })
     }, [])
 

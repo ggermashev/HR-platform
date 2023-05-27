@@ -57,13 +57,16 @@ class VacancyController {
     async create(req, res, next) {
         try {
             const {userId, companyName, profession, post, city, salary, workExperience,
-                todos, requirements, desirable, offer, questions, variants, skills} = req.body
+                todos, requirements, desirable, offer, questions, skills} = req.body
             const vacancy = await Vacancy.create({userId, companyName, profession, post, city, salary, workExperience,
                 todos, requirements, desirable, offer})
             for (let i = 0; i < questions.length; i++) {
+                if (questions[i].answer === ""){
+                    continue;
+                }
                 const q = await Question.create({question: questions[i].question, answer: questions[i].answer, vacancyId: vacancy.id})
-                for (let variant of variants[i]) {
-                    let answerVariant =  await AnswerVariant.create({variant: variant, questionId: q.id})
+                for (let variant of questions[i].variants) {
+                    let answerVariant =  await AnswerVariant.create({variant: variant.variant, questionId: q.id})
                 }
             }
             for (let s of skills) {
