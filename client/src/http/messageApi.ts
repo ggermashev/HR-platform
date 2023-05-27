@@ -5,8 +5,8 @@ export const getMessages = async (contactId: number) => {
     return data
 }
 
-export const sendMessage = async (message: string, userIdFrom: number, userIdTp: number, contactId: number) => {
-    const {data} = await $host.post(`api/messages/`)
+export const sendMessage = async (message: string, userIdFrom: number, userIdTo: number, contactId: number) => {
+    const {data} = await $host.post(`api/messages/`, {message, userIdFrom, userIdTo, contactId})
     return data
 }
 

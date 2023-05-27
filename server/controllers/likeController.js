@@ -1,19 +1,27 @@
-const {Like} = require('../models/models')
-const {Contact} = require('../models/models')
+const {Like, Contact, WatchedResumes, WatchedVacancies} = require('../models/models')
 const ApiError = require('../error/ApiError')
 
 class LikeController {
 
     async set(req, res, next) {
-        const {vacancyId, resumeId, status} =  req.body
-        let like = Like.findOne({where: {vacancyId, resumeId}})
+        const {vacancyId, resumeId, status, role} =  req.body
+        console.log("status:::::", status)
+        console.log("role::::", role)
+        let like = await Like.findOne({where: {vacancyId, resumeId}})
+        let watched = null
+        if (role === 'USER') {
+            watched = await WatchedVacancies.create({vacancyId, resumeId})
+        } else if (role === 'HR') {
+            watched = await WatchedResumes.create({vacancyId, resumeId})
+        }
         if (!like) {
-            like = Like.create({vacancyId, resumeId, status})
+            like = await Like.create({vacancyId, resumeId, status})
         } else {
-            like = Like.destroy({where: {id: like.id}})
             if (like.status === 'like' && status === 'like') {
-                const contact = Contact.create({vacancyId, resumeId})
+                console.log('match')
+                const contact = await Contact.create({vacancyId, resumeId})
             }
+            like = Like.destroy({where: {id: like.id}})
         }
         return res.json(like)
     }

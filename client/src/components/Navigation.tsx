@@ -15,7 +15,6 @@ const Navigation = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        console.log(user)
         isAuth().then(
             val => {dispatch(setIsAuth(true))},
             err => {dispatch(clearUser())}

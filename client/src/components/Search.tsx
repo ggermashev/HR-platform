@@ -12,13 +12,14 @@ import {ICity, IPost, IProfession, IResume, IVacancy, IWorkExperience} from "../
 import Vacancy from "./Vacancy";
 import {useAppSelector} from "../hooks/reduxHooks";
 import gsap from "gsap";
-import {getVacancies, getVacanciesByUser} from "../http/vacancyApi";
-import {getResumes, getResumesByUser} from "../http/resumeApi";
+import {getVacancies, getVacanciesByUser, getVacanciesForLikes} from "../http/vacancyApi";
+import {getResumes, getResumesByUser, getResumesForLikes} from "../http/resumeApi";
 import {getPostsByProfession} from "../http/postApi";
 import {getProfessions} from "../http/professionApi";
 import {getWorkExperiences} from "../http/workExperienceApi";
 import {getCities} from "../http/cityApi";
 import {setLike} from "../http/likeApi";
+import {isAuth} from "../http/userApi";
 
 const Search = () => {
     const [professions, setProfessions] = useState([] as IProfession[])
@@ -50,6 +51,7 @@ const Search = () => {
     const [decision, setDecision] = useState<"" | "like" | "dislike">("")
     const [reloadNumber, setReloadNumber] = useState(0)
     const [selfFormId, setSelfFormId] = useState(0)
+    const [userForms, setUserForms] = useState<IResume[] | IVacancy[]>()
 
     const tl = gsap.timeline()
 
@@ -103,18 +105,33 @@ const Search = () => {
                 setExperiences(experiences)
             }
         )
+        isAuth().then(() => {
+            user?.role == "USER"
+                ? getResumesByUser(user.id).then(
+                    vals => {
+                        setUserForms([...vals])
+                    })
+                : getVacanciesByUser(user.id).then(
+                    vals => {
+                        setUserForms([...vals])
+                    }
+                )
+        })
     }, [])
 
     useEffect(() => {
-        console.log(user)
-        user?.role == "USER"
-            ? getVacancies().then(vals => {
-                setCards(vals)
-            })
-            : getResumes().then(vals => {
-                setCards(vals)
-            })
-    }, [reloadNumber])
+        if (selfFormId !== 0) {
+            user?.role == "USER"
+                ? getVacanciesForLikes(selfFormId).then(vals => {
+                    setCards(vals)
+                })
+                : getResumesForLikes(selfFormId).then(vals => {
+                    setCards(vals)
+                })
+        } else {
+            setCards([])
+        }
+    }, [selfFormId])
 
     useEffect(() => {
         if (profession) {
@@ -211,7 +228,9 @@ const Search = () => {
                              //@ts-ignore
                              dislike.current.style.opacity = 0
                              if (decision !== "") {
-                                 setLike(selfFormId, cards[0]?.id as number, decision).then()
+                                 user.role === 'USER'
+                                     ? setLike(selfFormId, cards[0]?.id as number, decision, user.role).then()
+                                     : setLike(cards[0]?.id as number, selfFormId, decision, user.role).then()
                                  cards.shift()
                                  decision == "dislike"
                                      ? cardLeftAnimation("red", 300)
@@ -271,7 +290,9 @@ const Search = () => {
                              //@ts-ignore
                              dislike.current.style.opacity = 0
                              if (decision !== "") {
-                                 setLike(selfFormId, cards[0]?.id as number, decision).then()
+                                 user.role === 'USER'
+                                     ? setLike(selfFormId, cards[0]?.id as number, decision, user.role).then()
+                                     : setLike(cards[0]?.id as number, selfFormId, decision, user.role).then()
                                  cards.shift()
                                  decision == "dislike"
                                      ? cardLeftAnimation("red", 20)
@@ -310,7 +331,9 @@ const Search = () => {
                                                        moreInfo.current.style.display = "none"
                                                        //@ts-ignore
                                                        moreInfoPanel.current.style.display = "none"
-                                                       setLike(selfFormId, cards[0]?.id as number, "dislike").then()
+                                                       user.role === 'USER'
+                                                           ? setLike(selfFormId, cards[0]?.id as number, "dislike", user.role).then()
+                                                           : setLike(cards[0]?.id as number, selfFormId, 'dislike', user.role).then()
                                                        cards.shift()
                                                        window.innerWidth > 767
                                                            ? cardLeftAnimation("red", 300)
@@ -341,7 +364,9 @@ const Search = () => {
                                                        moreInfo.current.style.display = "none"
                                                        //@ts-ignore
                                                        moreInfoPanel.current.style.display = "none"
-                                                       setLike(selfFormId, cards[0]?.id as number, "like").then()
+                                                       user.role === 'USER'
+                                                           ? setLike(selfFormId, cards[0]?.id as number, 'like', user.role).then()
+                                                           : setLike(cards[0]?.id as number, selfFormId, 'like', user.role).then()
                                                        cards.shift()
                                                        window.innerWidth > 767
                                                            ? cardRightAnimation("green", 300)
@@ -366,64 +391,73 @@ const Search = () => {
                                 </Col>
                                 <Col className="col" xs={8} sm={8} md={6}
                                      style={{display: "flex", flexDirection: "column"}}>
-                                    <Card left={left}
-                                          bottom={bottom}
-                                          setBottom={setBottom}
-                                          rotation={rotation}
-                                          setIsDown={setIsDown}
-                                          setStartX={setStartX}
-                                          data={cards[0]}
-                                    />
-                                    <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                                        <Image className="dislike-img"
-                                               src={dislikeHover
-                                                   ? require("../images/refuse_red.png")
-                                                   : require("../images/refuse.png")}
-                                               onMouseOver={() => {
-                                                   setDislikeHover(true)
-                                               }}
-                                               onMouseOut={() => {
-                                                   setDislikeHover(false)
-                                               }}
-                                               onClick={() => {
-                                                   setLike(selfFormId, cards[0]?.id as number, "dislike").then()
-                                                   cards.shift()
-                                                   window.innerWidth > 767
-                                                       ? cardLeftAnimation("red", 300)
-                                                       : cardLeftAnimation("red", 20)
-                                                   if (cards.length == 0) {
-                                                       setReloadNumber(reloadNumber + 1)
-                                                   }
-                                               }}
-                                        />
-                                        <Btn text={"Подробнее"} onClick={() => {
-                                            //@ts-ignore
-                                            moreInfo.current.style.display = "block"
-                                            //@ts-ignore
-                                            moreInfoPanel.current.style.display = "flex"
-                                        }}/>
-                                        <Image className="like-img"
-                                               src={likeHover
-                                                   ? require("../images/handshake_green.png")
-                                                   : require("../images/handshake.png")}
-                                               onMouseOver={() => {
-                                                   setLikeHover(true)
-                                               }}
-                                               onMouseOut={() => {
-                                                   setLikeHover(false)
-                                               }}
-                                               onClick={() => {
-                                                   setLike(selfFormId, cards[0]?.id as number, "like").then()
-                                                   cards.shift()
-                                                   window.innerWidth > 767
-                                                       ? cardRightAnimation("green", 300)
-                                                       : cardRightAnimation("green", 20)
-                                                   if (cards.length == 0) {
-                                                       setReloadNumber(reloadNumber + 1)
-                                                   }
-                                               }}
-                                        />
-                                    </div>
+                                    <SelectInput default_={"Выберите анкету"} options={userForms ? userForms.map(u => {
+                                        return {id: u.id as number, profession: u.profession, post: u.post}
+                                    }) : []} setValue={(s) => setSelfFormId(parseInt(s))}/>
+                                    {cards.length > 0 &&
+                                        <Card left={left}
+                                              bottom={bottom}
+                                              setBottom={setBottom}
+                                              rotation={rotation}
+                                              setIsDown={setIsDown}
+                                              setStartX={setStartX}
+                                              data={cards[0]}
+                                        />}
+                                    {cards.length > 0 &&
+                                        <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                            <Image className="dislike-img"
+                                                   src={dislikeHover
+                                                       ? require("../images/refuse_red.png")
+                                                       : require("../images/refuse.png")}
+                                                   onMouseOver={() => {
+                                                       setDislikeHover(true)
+                                                   }}
+                                                   onMouseOut={() => {
+                                                       setDislikeHover(false)
+                                                   }}
+                                                   onClick={() => {
+                                                       user.role === 'USER'
+                                                           ? setLike(selfFormId, cards[0]?.id as number, 'dislike', user.role).then()
+                                                           : setLike(cards[0]?.id as number, selfFormId, 'dislike', user.role).then()
+                                                       cards.shift()
+                                                       window.innerWidth > 767
+                                                           ? cardLeftAnimation("red", 300)
+                                                           : cardLeftAnimation("red", 20)
+                                                       if (cards.length == 0) {
+                                                           setReloadNumber(reloadNumber + 1)
+                                                       }
+                                                   }}
+                                            />
+                                            <Btn text={"Подробнее"} onClick={() => {
+                                                //@ts-ignore
+                                                moreInfo.current.style.display = "block"
+                                                //@ts-ignore
+                                                moreInfoPanel.current.style.display = "flex"
+                                            }}/>
+                                            <Image className="like-img"
+                                                   src={likeHover
+                                                       ? require("../images/handshake_green.png")
+                                                       : require("../images/handshake.png")}
+                                                   onMouseOver={() => {
+                                                       setLikeHover(true)
+                                                   }}
+                                                   onMouseOut={() => {
+                                                       setLikeHover(false)
+                                                   }}
+                                                   onClick={() => {
+                                                       user.role === 'USER'
+                                                           ? setLike(selfFormId, cards[0]?.id as number, 'like', user.role).then()
+                                                           : setLike(cards[0]?.id as number, selfFormId, 'like', user.role).then()
+                                                       cards.shift()
+                                                       window.innerWidth > 767
+                                                           ? cardRightAnimation("green", 300)
+                                                           : cardRightAnimation("green", 20)
+                                                       if (cards.length == 0) {
+                                                           setReloadNumber(reloadNumber + 1)
+                                                       }
+                                                   }}
+                                            />
+                                        </div>}
                                 </Col>
                                 <Col className="col" xs={2} sm={2} md={3}>
                                     <div className="like" ref={like}>

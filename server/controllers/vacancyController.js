@@ -1,4 +1,4 @@
-const {Vacancy, Question, AnswerVariant, VacancySkills, Skill, Resume} = require('../models/models')
+const {Vacancy, Question, AnswerVariant, VacancySkills, Skill, Resume, WatchedVacancies} = require('../models/models')
 
 class VacancyController {
     async getOne(req, res) {
@@ -17,6 +17,17 @@ class VacancyController {
         const vacancies = await Vacancy.findAll()
         return res.json(vacancies)
     }
+
+
+    async getForLikes(req, res) {
+        const {resumeId} = req.params
+        const resume = await Resume.findOne({where: {id: resumeId}})
+        const existVacancies = await WatchedVacancies.findAll({where: {resumeId: resume.id}})
+        let vacancies = await Vacancy.findAll()
+        vacancies = vacancies.filter(v => {return !existVacancies.map(e_v => e_v.vacancyId).includes(v.id)})
+        return res.json(vacancies)
+    }
+
 
     async create(req, res) {
         const {userId, companyName, profession, post, city, salary, workExperience,

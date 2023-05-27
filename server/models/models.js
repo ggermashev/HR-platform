@@ -72,7 +72,7 @@ const Like = sequelize.define('like', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     //idVacancy
     //idResume
-    status: {type: DataTypes.STRING}
+    status: {type: DataTypes.STRING},
 })
 
 const University = sequelize.define('university', {
@@ -127,6 +127,14 @@ const ResumeSkills = sequelize.define('resume_skills', {
 })
 
 const VacancySkills = sequelize.define('vacancy_skills', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+})
+
+const WatchedResumes = sequelize.define('watched_resumes', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+})
+
+const WatchedVacancies = sequelize.define('watched_vacancies', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
@@ -187,6 +195,16 @@ User.hasMany(Vacancy)
 Vacancy.belongsToMany(Skill, {through: VacancySkills, onDelete: 'RESTRICT'})
 Skill.belongsToMany(Vacancy, {through: VacancySkills, onDelete: 'CASCADE'})
 
+Resume.hasMany(WatchedResumes)
+WatchedResumes.belongsTo(Resume)
+Vacancy.hasMany(WatchedResumes)
+WatchedResumes.belongsTo(Vacancy)
+
+Resume.hasMany(WatchedVacancies)
+WatchedVacancies.belongsTo(Resume)
+Vacancy.hasMany(WatchedVacancies)
+WatchedVacancies.belongsTo(Vacancy)
+
 
 module.exports = {
     User,
@@ -206,5 +224,7 @@ module.exports = {
     Resume,
     Vacancy,
     ResumeSkills,
-    VacancySkills
+    VacancySkills,
+    WatchedVacancies,
+    WatchedResumes
 }

@@ -16,6 +16,14 @@ export const getVacanciesByUser = async (userId: number) => {
     return data
 }
 
+export const getVacanciesForLikes = async (resumeId: number) => {
+    if  (resumeId == 0) {
+        return null
+    }
+    const {data} = await $host.get(`api/vacancies/for_likes/${resumeId}`)
+    return data
+}
+
 export const createVacancy = async (resume: IVacancy) => {
     const {data} = await $host.post(`api/vacancies`, resume)
     return data

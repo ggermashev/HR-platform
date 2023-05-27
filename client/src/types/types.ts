@@ -15,8 +15,10 @@ export interface IAnswerVariant {
 
 export interface IContact {
     id?: number;
-    idVacancy: number;
-    idResume: number;
+    vacancyId: number;
+    resumeId: number;
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 export interface IMessage {

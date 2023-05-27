@@ -7,6 +7,7 @@ import {setTestId} from "../redux/activeTestSlice";
 import {IResume, IUser, IVacancy} from "../types/types";
 import {getContact} from "../http/contactApi";
 import {getResume} from "../http/resumeApi";
+import {getVacancy} from "../http/vacancyApi";
 
 interface IContact {
     click: (e: any) => void,
@@ -26,14 +27,10 @@ const Contact: FC<IContact> = ({id, click, contactId, lastMsg}) => {
 
 
     useEffect(() => {
-        user.role == 'user'
-            ? getContact(contactId).then(val => {
-                getResume(val.id).then(val => setContact(val))
-            })
-            : getContact(contactId).then(val => {
-                getResume(val.id).then(val => setContact(val))
-            })
-    })
+        user.role == 'USER'
+            ? getVacancy(contactId).then(val => setContact(val))
+            : getResume(contactId).then(val => setContact(val))
+    }, [])
 
     return (
         <div className={activeChatId == id ? "contact contact-active" : "contact"} onClick={e => {
@@ -45,7 +42,7 @@ const Contact: FC<IContact> = ({id, click, contactId, lastMsg}) => {
             </div>
             <div className="content">
                 <div className="title"><p>{contact?.profession} - {contact?.post}</p></div>
-                <div className="msg"><p>{lastMsg}</p></div>
+                {/*<div className="msg"><p>{lastMsg}</p></div>*/}
             </div>
         </div>
     );
