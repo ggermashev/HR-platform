@@ -2,15 +2,19 @@
 export interface IQuestion {
     id?: number;
     question: string;
-    answer: string;
+    answer?: string;
     variants: IAnswerVariant[],//
     vacancyId?: number,
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 export interface IAnswerVariant {
     id?: number,
     variant: string,
-    questionId?: number
+    questionId?: number,
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 export interface IContact {

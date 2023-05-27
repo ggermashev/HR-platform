@@ -1,0 +1,15 @@
+.dropdown .dropdown-item {
+  pointer-events: none;
+  padding-left: 5px;
+  padding-right: 5px;
+  position: relative;
+}
+.dropdown .dropdown-item:hover {
+  background-color: white;
+}
+.dropdown .dropdown-item .btn {
+  pointer-events: auto;
+  width: 90%;
+}
+
+/*# sourceMappingURL=DropDownBtns.css.map */

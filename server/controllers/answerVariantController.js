@@ -4,7 +4,8 @@ const ApiError = require('../error/ApiError')
 class AnswerVariantController {
     async get(req, res, next) {
         try {
-            const {questionId} =  req.params
+            const {questionId} = req.params
+            console.log(req.params)
             const answerVariants = await AnswerVariant.findAll({where: {questionId}})
             return res.json(answerVariants)
         } catch (e) {

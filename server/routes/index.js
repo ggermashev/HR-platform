@@ -18,6 +18,7 @@ const resumeRouter = require('./resumeRouter')
 const vacancyRouter = require('./vacancyRouter')
 const resumeSkillsRouter = require('./resumeSkillsRouter')
 const vacancySkillsRouter = require('./vacancySkillsRouter')
+const testResultsRouter = require('./testResultsRouter')
 
 router.use('/professions', professionRouter)
 router.use('/users', userRouter)
@@ -37,6 +38,7 @@ router.use('/resumes', resumeRouter)
 router.use('/vacancies', vacancyRouter)
 router.use('/resume_skills', resumeSkillsRouter)
 router.use('/vacancy_skills', vacancySkillsRouter)
+router.use('/test_results', testResultsRouter)
 
 
 module.exports = router

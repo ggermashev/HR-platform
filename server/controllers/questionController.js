@@ -10,7 +10,6 @@ class QuestionController {
         } catch (e) {
             return next( ApiError.badRequest(e))
         }
-
     }
 }
 

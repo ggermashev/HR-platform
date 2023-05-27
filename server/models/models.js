@@ -138,6 +138,12 @@ const WatchedVacancies = sequelize.define('watched_vacancies', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
+const TestResults = sequelize.define('test_results', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    points: {type: DataTypes.INTEGER},
+    maxPoints: {type: DataTypes.INTEGER},
+})
+
 Question.hasMany(AnswerVariant, {
     onDelete: 'CASCADE'
 })
@@ -205,6 +211,10 @@ WatchedVacancies.belongsTo(Resume)
 Vacancy.hasMany(WatchedVacancies)
 WatchedVacancies.belongsTo(Vacancy)
 
+User.hasMany(TestResults)
+TestResults.belongsTo(User)
+Vacancy.hasMany(TestResults)
+TestResults.belongsTo(Vacancy)
 
 module.exports = {
     User,
@@ -226,5 +236,6 @@ module.exports = {
     ResumeSkills,
     VacancySkills,
     WatchedVacancies,
-    WatchedResumes
+    WatchedResumes,
+    TestResults
 }

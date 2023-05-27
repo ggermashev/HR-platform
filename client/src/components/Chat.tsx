@@ -15,13 +15,20 @@ import {useAppSelector} from "../hooks/reduxHooks";
 import {io, Socket} from "socket.io-client";
 import {DefaultEventsMap} from '@socket.io/component-emitter';
 import {socket} from "../App";
+import SelectInput from "../ui/SelectInput";
+import Search from "./Search";
+import DropDowns from "../ui/DropDowns";
+import {Dropdown} from "react-bootstrap";
+import DropDownBtns from "../ui/DropDownBtns";
+import Test from "./Test";
 
 interface IChat {
     onBack?: () => void,
+    vacancyId?: number,
 }
 
 
-const Chat: FC<IChat> = ({onBack}) => {
+const Chat: FC<IChat> = ({onBack, vacancyId}) => {
     const [msg, setMsg] = useState("")
     const dispatch = useDispatch()
     const chatId = useAppSelector(state => state.activeChat.id)
@@ -29,6 +36,8 @@ const Chat: FC<IChat> = ({onBack}) => {
     const [messages, setMessages] = useState<IMessage[]>()
     const user = useAppSelector(state => state.user)
     const [receiverId, setReceiverId] = useState<number>(-1)
+    const [testWatching, setTestWatching] = useState(false)
+    const [vacancyID, setVacancyId] = useState(-1)
 
     // const socket = new WebSocket('ws://localhost:5000/')
     // socket.onmessage = (event) => {
@@ -68,6 +77,7 @@ const Chat: FC<IChat> = ({onBack}) => {
                 })
                 if (user.role === 'USER') {
                     getVacancy(val.vacancyId).then(vac => {
+                        setVacancyId(vac.id)
                         setReceiverId(vac.userId)
                     })
                 } else {
@@ -81,48 +91,74 @@ const Chat: FC<IChat> = ({onBack}) => {
     }, [chatId])
 
     return (
-        <div className="chat">
-            {chatId !== -1
-                ? <>
-                    <div className="head">
-                        <div className="back">
-                            <Btn text={"Назад"} onClick={() => {
-                                dispatch(setChatId(-1))
-                                if (onBack) {
-                                    onBack()
-                                }
-                            }}/>
-                        </div>
-                        <div className="chat-info"><p>Название</p></div>
-                        <Btn className="profile-btn" text={"Профиль"} onClick={() => {
-                        }}/>
-                        <Btn className="delete-btn" text={"Удалить"} onClick={() => {
-                        }}/>
-                    </div>
-                    <div className="messages">
-                        {messages && messages.map(m =>
-                            <div key={m.id} className={m.userIdFrom == user.id ? "my" : "other"}>{m.message}</div>
-                        )}
-                        {/*<div className="choose-time">*/}
-                        {/*    <Btn text={"Выбрать время собеседования"} onClick={() => {*/}
-                        {/*    }}/>*/}
-                        {/*    <Calendar/>*/}
-                        {/*</div>*/}
-                    </div>
-                    <div className="input-field">
-                        <Input text={"Сообщение"} value={msg} setValue={setMsg}/>
-                        <Btn style={{marginBottom: "20px"}} text={"отправить"} onClick={() => {
-                            sendMessage(msg, user.id, receiverId as number, chatId).then(val => {
-                                socket.emit('chat message', val.id)
-                                setMsg("")
-                            })
-                        }}/>
-                    </div>
+        <>
+            {!testWatching
+                ? <div className="chat">
+                    {chatId !== -1
+                        ? <>
+                            <div className="head">
+                                <div className="back">
+                                    <Btn text={"Назад"} onClick={() => {
+                                        dispatch(setChatId(-1))
+                                        if (onBack) {
+                                            onBack()
+                                        }
+                                    }}/>
+                                </div>
+                                <div className="chat-info"><p>Название</p></div>
+                                {user.role === 'USER' &&
+                                    <DropDownBtns className="delete-btn" title={"Меню"} items={[
+                                        <Btn text={"Пройти тест"} onClick={() => {
+                                            setTestWatching(true)
+                                        }}/>,
+                                        <Btn text={"Отказать"} onClick={() => {
+                                        }}/>,
+                                        <Btn text={"Профиль"} onClick={() => {
+                                        }}/>,
+                                    ]}/>}
+                                {user.role === 'HR'
+                                    && <DropDownBtns className="delete-btn" title={"Меню"}
+                                                     items={[
+                                                         <Btn text={"Результаты теста"} onClick={() => {
+                                                         }}/>,
+                                                         <Btn text={"Отказать"} onClick={() => {
+                                                         }}/>,
+                                                         <Btn text={"Профиль"} onClick={() => {
+                                                         }}/>,
+                                                     ]}/>}
+                                {/*<Btn className="delete-btn" text={"Удалить"} onClick={() => {*/}
+                                {/*}}/>*/}
+                            </div>
+                            <div className="messages">
+                                {messages && messages.map(m =>
+                                    <div key={m.id}
+                                         className={m.userIdFrom == user.id ? "my" : "other"}>{m.message}</div>
+                                )}
+                                {/*<div className="choose-time">*/}
+                                {/*    <Btn text={"Выбрать время собеседования"} onClick={() => {*/}
+                                {/*    }}/>*/}
+                                {/*    <Calendar/>*/}
+                                {/*</div>*/}
+                            </div>
+                            <div className="input-field">
+                                <Input text={"Сообщение"} value={msg} setValue={setMsg}/>
+                                <Btn style={{marginBottom: "20px"}} text={"отправить"} onClick={() => {
+                                    sendMessage(msg, user.id, receiverId as number, chatId).then(val => {
+                                        socket.emit('chat message', val.id)
+                                        setMsg("")
+                                    })
+                                }}/>
+                            </div>
 
-                </>
-                : <></>
+                        </>
+                        : <></>
+                    }
+                </div>
+                : user.role == 'USER' && <Test onBack={() => {setTestWatching(false)}} vacancyId={vacancyID}/>
             }
-        </div>
+        </>
+
+
     );
 };
 
