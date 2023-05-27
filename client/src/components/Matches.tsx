@@ -57,25 +57,25 @@ const Matches = () => {
             <Container fluid>
                 <Row>
                     <Col className="col contacts" xs={12} sm={12} md={4} ref={contactsRef}>
-                        {contacts.map(c =><></>
-                            // <Contact key={c.id} id={c.id as number}
-                            //          contactId={user.role === 'USER' ? c.vacancyId as number : c.resumeId as number}
-                            //          lastMsg={"msg"} click={(e) => {
-                            //     //@ts-ignore
-                            //     chat.current.style.display = "block"
-                            //     //@ts-ignore
-                            //     contactsRef.current.style.display = "none"
-                            // }}/>
+                        {contacts.map(c =>
+                            <Contact key={c.id} id={c.id as number}
+                                     contactId={user.role === 'USER' ? c.vacancyId as number : c.resumeId as number}
+                                     lastMsg={"msg"} click={(e) => {
+                                //@ts-ignore
+                                chat.current.style.display = "block"
+                                //@ts-ignore
+                                contactsRef.current.style.display = "none"
+                            }}/>
                         )}
 
                     </Col>
                     <Col className="col col-chat" xs={12} sm={12} md={8} ref={chat}>
-                        {/*<Chat onBack={() => {*/}
-                        {/*    //@ts-ignore*/}
-                        {/*    chat.current.style.display = "none"*/}
-                        {/*    //@ts-ignore*/}
-                        {/*    contactsRef.current.style.display = "block"*/}
-                        {/*}}/>*/}
+                        <Chat onBack={() => {
+                            //@ts-ignore
+                            chat.current.style.display = "none"
+                            //@ts-ignore
+                            contactsRef.current.style.display = "block"
+                        }}/>
                     </Col>
                 </Row>
             </Container>

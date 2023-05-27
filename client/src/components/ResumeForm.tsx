@@ -47,7 +47,7 @@ const ResumeForm = () => {
                 <Input text={"Город"} value={resume.city} setValue={s => {
                     setResume({...resume, city: s})
                 }}/>
-                <Input text={"Желаемая зарплата"} value={resume.salary?.toString() as string} setValue={s => {
+                <Input text={"Желаемая зарплата"} value={resume.salary? resume.salary.toString() : ""} setValue={s => {
                     setResume({...resume, salary: parseInt(s)})
                 }}/>
                 <Container fluid>
@@ -157,6 +157,14 @@ const ResumeForm = () => {
                             <Input text={"Название компании"} value={j.companyName} setValue={(val) => {
                                 let copy_jobs = [...resume.jobs]
                                 copy_jobs[i].companyName = val
+                                setResume({
+                                    ...resume,
+                                    jobs: copy_jobs
+                                })
+                            }}/>
+                            <Input text={"Профессия"} value={j.profession} setValue={(val) => {
+                                let copy_jobs = [...resume.jobs]
+                                copy_jobs[i].profession = val
                                 setResume({
                                     ...resume,
                                     jobs: copy_jobs

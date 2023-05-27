@@ -7,6 +7,8 @@ import {IUser} from "../types/types";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {isAuth} from "../http/userApi";
 import {clearUser, setIsAuth} from "../redux/userSlice";
+import {setChatId} from "../redux/activeChatSlice";
+import {setTestId} from "../redux/activeTestSlice";
 
 const Navigation = () => {
     const [active, setActive] = useState(-1)
@@ -19,6 +21,7 @@ const Navigation = () => {
             val => {dispatch(setIsAuth(true))},
             err => {dispatch(clearUser())}
         )
+        setActive(0)
     }, [user])
 
     return (
@@ -42,6 +45,8 @@ const Navigation = () => {
                             ? <Nav.Link as={Link} to="/login" onClick={() => {
                                 localStorage.removeItem('token')
                                 dispatch(clearUser())
+                                dispatch(setChatId(-1))
+                                dispatch(setTestId(-1))
                             }
                             }>Выход</Nav.Link>
                             : <><Nav.Link as={Link} to="/registration">Регистрация</Nav.Link><Nav.Link as={Link} to="/login">Вход</Nav.Link></>

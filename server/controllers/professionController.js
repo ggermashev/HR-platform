@@ -3,8 +3,13 @@ const ApiError = require('../error/ApiError')
 
 class ProfessionController {
     async getAll(req, res, next) {
-        const professions = await Profession.findAll()
-        return res.json(professions)
+        try {
+            const professions = await Profession.findAll()
+            return res.json(professions)
+        } catch (e) {
+            return next( ApiError.badRequest(e))
+        }
+
     }
 }
 

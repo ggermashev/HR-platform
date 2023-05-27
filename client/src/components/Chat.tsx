@@ -11,6 +11,7 @@ import {getContact} from "../http/contactApi";
 import {getMessages, sendMessage} from "../http/messageApi";
 import {getVacancy} from "../http/vacancyApi";
 import {getResume} from "../http/resumeApi";
+import {useAppSelector} from "../hooks/reduxHooks";
 
 interface IChat {
     onBack?: () => void,
@@ -19,28 +20,42 @@ interface IChat {
 const Chat: FC<IChat> = ({onBack}) => {
     const [msg, setMsg] = useState("")
     const dispatch = useDispatch()
-    // @ts-ignore
-    const chatId = useSelector(state => state.activeChat.id)
+    const chatId = useAppSelector(state => state.activeChat.id)
     const [chooseTime, setChooseTime] = useState(false)
     const [messages, setMessages] = useState<IMessage[]>()
-    // @ts-ignore
-    const user = useSelector(state => state.user)
-    const [receiverId, setReceiverId] = useState<number>()
+    const user = useAppSelector(state => state.user)
+    const [receiverId, setReceiverId] = useState<number>(-1)
+
+    const socket = new WebSocket('ws://localhost:5000/')
+
+    socket.onmessage = (event) => {
+        const [chatId, userIdFrom, userIdTo] = event.data.split(' ')
+        if (userIdFrom == user.id || userIdTo == user.id) {
+            console.log(user.id)
+            getMessages(chatId).then(vals => {
+                setMessages(vals)
+            })
+        }
+    }
 
     useEffect(() => {
-        getContact(chatId).then(val => {
-            getMessages(chatId).then(vals => {setMessages(vals)})
-            if (user.role === 'USER') {
-                getVacancy(val.vacancyId).then(val => {
-                    setReceiverId(val.userId)
+        if (chatId !== -1) {
+            getContact(chatId).then(val => {
+                getMessages(chatId).then(vals => {
+                    setMessages(vals)
                 })
-            } else {
-                getResume(val.resumeId).then(val => {
-                    setReceiverId(val.userId)
-                })
-            }
-        })
-    }, [])
+                if (user.role === 'USER') {
+                    getVacancy(val.vacancyId).then(vac => {
+                        setReceiverId(vac.userId)
+                    })
+                } else {
+                    getResume(val.resumeId).then(res => {
+                        setReceiverId(res.userId)
+                    })
+                }
+            })
+        }
+    }, [chatId])
 
     return (
         <div className="chat">
@@ -63,7 +78,7 @@ const Chat: FC<IChat> = ({onBack}) => {
                     </div>
                     <div className="messages">
                         {messages && messages.map(m =>
-                            <div className={m.userIdFrom == user.id ? "my" : "other"}>{m.message}</div>
+                            <div key={m.id} className={m.userIdFrom == user.id ? "my" : "other"}>{m.message}</div>
                         )}
                         {/*<div className="choose-time">*/}
                         {/*    <Btn text={"Выбрать время собеседования"} onClick={() => {*/}
@@ -74,7 +89,10 @@ const Chat: FC<IChat> = ({onBack}) => {
                     <div className="input-field">
                         <Input text={"Сообщение"} value={msg} setValue={setMsg}/>
                         <Btn style={{marginBottom: "20px"}} text={"отправить"} onClick={() => {
-                            sendMessage(msg, user.id, receiverId as number, chatId).then()
+                            sendMessage(msg, user.id, receiverId as number, chatId).then(val => {
+                                socket.send(val.id)
+                                setMsg("")
+                            })
                         }}/>
                     </div>
 

@@ -3,14 +3,24 @@ const ApiError = require('../error/ApiError')
 
 class EducationController {
     async getAll(req, res, next) {
-        const educations = await Education.findAll()
-        return res.json(educations)
+        try {
+            const educations = await Education.findAll()
+            return res.json(educations)
+        } catch (e) {
+            return next( ApiError.badRequest(e))
+        }
+
     }
 
     async getOne(req, res, next) {
-        const {educationId} =  req.params
-        const education = await Education.findOne({where: {educationId}})
-        return res.json(education)
+        try {
+            const {educationId} =  req.params
+            const education = await Education.findOne({where: {educationId}})
+            return res.json(education)
+        } catch (e) {
+            return next( ApiError.badRequest(e))
+        }
+
     }
 
 }

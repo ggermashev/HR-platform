@@ -7,6 +7,7 @@ const fileUpload = require('express-fileupload')
 const router = require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const path = require('path')
+const {Message} = require('./models/models')
 
 const PORT = process.env.PORT || 5000
 
@@ -16,11 +17,17 @@ app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 app.use('/api', router)
-
 app.use(errorHandler)
-app.get('/', (req, res) => {
-    res.status(200).json({message: 'working'})
+
+
+const WSServer = require('express-ws')(app)
+app.ws('/', (ws, res) => {
+    ws.on('message', async (msgId)=> {
+        const msg = await Message.findOne({where: {id: msgId}})
+        ws.send(`${msg.contactId} ${msg.userIdFrom} ${msg.userIdTo}`)
+    })
 })
+
 
 const start = async () => {
     try {

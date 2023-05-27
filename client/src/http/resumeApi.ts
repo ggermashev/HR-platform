@@ -2,9 +2,6 @@ import {$host} from "./index";
 import {IResume} from "../types/types";
 
 export const getResume = async (resumeId: number) => {
-    if (!resumeId) {
-        return;
-    }
     const {data} = await $host.get(`api/resumes/${resumeId}`)
     return data
 }
@@ -15,9 +12,6 @@ export const getResumesByUser = async (userId: number) => {
 }
 
 export const getResumesForLikes = async (vacancyId: number) => {
-    if (vacancyId == 0) {
-        return null
-    }
     const {data} = await $host.get(`api/resumes/for_likes/${vacancyId}`)
     return data
 }

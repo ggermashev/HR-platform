@@ -43,14 +43,14 @@ const City = sequelize.define('city', {
 
 const Question = sequelize.define('question', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    question: {type: DataTypes.STRING},
-    answer: {type: DataTypes.STRING}
+    question: {type: DataTypes.STRING(512), },
+    answer: {type: DataTypes.STRING(512)}
     //vacancyId
 })
 
 const AnswerVariant = sequelize.define('answer_variant', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    variant: {type: DataTypes.STRING},
+    variant: {type: DataTypes.STRING(512)},
     //questionID
 })
 
@@ -62,7 +62,7 @@ const Contact = sequelize.define('contact', {
 
 const Message = sequelize.define('message', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    message: {type: DataTypes.STRING},
+    message: {type: DataTypes.STRING(2048)},
     //userIdFrom
     //userIdTo
     //contactId
@@ -89,7 +89,7 @@ const Job = sequelize.define('job', {
     companyName: {type: DataTypes.STRING},
     profession: {type: DataTypes.STRING},
     post: {type: DataTypes.STRING},
-    todos: {type: DataTypes.STRING},
+    todos: {type: DataTypes.STRING(512)},
     workFrom: {type: DataTypes.INTEGER},
     workTo: {type: DataTypes.INTEGER},
     //resumeId
@@ -104,7 +104,7 @@ const Resume = sequelize.define('resume', {
     salary: {type: DataTypes.INTEGER},
     education: {type: DataTypes.STRING},
     workExperience: {type: DataTypes.STRING},
-    description: {type: DataTypes.STRING},
+    description: {type: DataTypes.STRING(2048)},
 })
 
 const Vacancy = sequelize.define('vacancy', {
@@ -116,10 +116,10 @@ const Vacancy = sequelize.define('vacancy', {
     city: {type: DataTypes.STRING},
     salary: {type: DataTypes.INTEGER},
     workExperience: {type: DataTypes.STRING},
-    todos: {type: DataTypes.STRING},
-    requirements: {type: DataTypes.STRING},
-    desirable: {type: DataTypes.STRING},
-    offer: {type: DataTypes.STRING},
+    todos: {type: DataTypes.STRING(2048)},
+    requirements: {type: DataTypes.STRING(2048)},
+    desirable: {type: DataTypes.STRING(2048)},
+    offer: {type: DataTypes.STRING(2048)},
 })
 
 const ResumeSkills = sequelize.define('resume_skills', {
