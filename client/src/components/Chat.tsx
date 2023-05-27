@@ -8,7 +8,9 @@ import {setChatId} from "../redux/activeChatSlice";
 import Calendar from "./Calendar";
 import {IMessage, IResume, IUser, IVacancy} from "../types/types";
 import {getContact} from "../http/contactApi";
-import {sendMessage} from "../http/messageApi";
+import {getMessages, sendMessage} from "../http/messageApi";
+import {getVacancy} from "../http/vacancyApi";
+import {getResume} from "../http/resumeApi";
 
 interface IChat {
     onBack?: () => void,
@@ -23,10 +25,20 @@ const Chat: FC<IChat> = ({onBack}) => {
     const [messages, setMessages] = useState<IMessage[]>()
     // @ts-ignore
     const user = useSelector(state => state.user)
+    const [receiverId, setReceiverId] = useState<number>()
 
     useEffect(() => {
         getContact(chatId).then(val => {
-            setMessages(val.messages)
+            getMessages(chatId).then(vals => {setMessages(vals)})
+            if (user.role === 'USER') {
+                getVacancy(val.vacancyId).then(val => {
+                    setReceiverId(val.userId)
+                })
+            } else {
+                getResume(val.resumeId).then(val => {
+                    setReceiverId(val.userId)
+                })
+            }
         })
     }, [])
 
@@ -62,7 +74,7 @@ const Chat: FC<IChat> = ({onBack}) => {
                     <div className="input-field">
                         <Input text={"Сообщение"} value={msg} setValue={setMsg}/>
                         <Btn style={{marginBottom: "20px"}} text={"отправить"} onClick={() => {
-                            sendMessage(msg, 0, 0, chatId).then()
+                            sendMessage(msg, user.id, receiverId as number, chatId).then()
                         }}/>
                     </div>
 

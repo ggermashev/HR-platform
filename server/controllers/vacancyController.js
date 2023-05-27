@@ -19,8 +19,9 @@ class VacancyController {
     }
 
 
-    async getForLikes(req, res) {
+    async getForLikes(req, res, next) {
         const {resumeId} = req.params
+        if (!resumeId) {next()}
         const resume = await Resume.findOne({where: {id: resumeId}})
         const existVacancies = await WatchedVacancies.findAll({where: {resumeId: resume.id}})
         let vacancies = await Vacancy.findAll()

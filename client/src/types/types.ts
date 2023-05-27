@@ -27,6 +27,8 @@ export interface IMessage {
     userIdFrom: number,
     userIdTo: number,
     contactId: number;
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 export interface ILike {
