@@ -34,6 +34,8 @@ const ResumeForm = () => {
     const [display, setDisplay] = useState("none")
     const navigate = useNavigate()
 
+
+
     return (
         <div className="resume-form" onClick={() => {
             setDisplay("none")

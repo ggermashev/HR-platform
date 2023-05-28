@@ -45,6 +45,16 @@ class ContactController {
         }
 
     }
+
+    async delete(req, res, next) {
+        try {
+            const {contactId} = req.params
+            const contact = Contact.destroy({where: {id: contactId}})
+            return res.json(contact)
+        } catch {
+
+        }
+    }
 }
 
 module.exports = new ContactController()

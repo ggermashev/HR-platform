@@ -15,4 +15,9 @@ export const getContactsByResume = async (resumeId: number) => {
     return data
 }
 
+export const deleteContact = async (contactId: number) => {
+    const {data} = await $host.delete(`api/contacts/${contactId}`)
+    return data
+}
+
 

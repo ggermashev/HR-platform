@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Input from "../ui/Input";
 import "./css/VacancyForm.css"
 import TextInput from "../ui/TextInput";
@@ -6,18 +6,27 @@ import {Button, Col, Container, Image, Row} from "react-bootstrap";
 import TagsInput from "../ui/TagsInput";
 import SelectInput from "../ui/SelectInput";
 import Btn from "../ui/Btn";
-import {IAnswerVariant, IQuestion, IVacancy} from "../types/types";
+import {IAnswerVariant, IQuestion, IVacancy, IWorkExperience} from "../types/types";
 import FormRadio from "../ui/FormRadio";
 import {useSelector} from "react-redux";
 import {useAppSelector} from "../hooks/reduxHooks";
 import {createVacancy} from "../http/vacancyApi";
 import {useNavigate} from "react-router-dom";
 import resume from "./Resume";
+import {getWorkExperiences} from "../http/workExperienceApi";
 
 const VacancyForm = () => {
 
     const user = useAppSelector(state => state.user)
-    const experiences = useAppSelector(state => state.experiences)
+    const [experiences, setExperiences] = useState<IWorkExperience[]>([])
+
+    useEffect(() => {
+        getWorkExperiences().then(vals => {
+            console.log(experiences)
+            setExperiences(vals)
+        })
+    }, [])
+
     const [vacancy, setVacancy] = useState<IVacancy>({
         userId: user.id,
         companyName: "",
@@ -48,13 +57,16 @@ const VacancyForm = () => {
                 <Input text={"Название компании"} value={vacancy.companyName} setValue={s => {
                     setVacancy({...vacancy, companyName: s})
                 }}/>
-                <Input text={"Профессия"} value={vacancy.profession} setValue={s => setVacancy({...vacancy, profession: s})}/>
+                <Input text={"Профессия"} value={vacancy.profession}
+                       setValue={s => setVacancy({...vacancy, profession: s})}/>
                 <Input text={"Должность"} value={vacancy.post} setValue={s => setVacancy({...vacancy, post: s})}/>
-                <Input text={"Зарплата"} value={vacancy.salary?.toString() as string} setValue={s => {
-                    setVacancy({...vacancy, salary: parseInt(s)})
-                }}/>
+                <Input text={"Город"} value={vacancy.city} setValue={s => setVacancy({...vacancy, city: s})}/>
+                <Input text={"Зарплата"} value={vacancy.salary ? vacancy.salary.toString() as string : ""}
+                       setValue={s => {
+                           setVacancy({...vacancy, salary: parseInt(s)})
+                       }}/>
                 <SelectInput default_={"Опыт не важен"}
-                             options={experiences.values}
+                             options={experiences.map(e => e.workExperience)}
                              setValue={s => {
                                  setVacancy({...vacancy, workExperience: s})
                              }}/>
@@ -86,7 +98,8 @@ const VacancyForm = () => {
                 </Container>
 
                 {vacancy.questions.map((q, i) =>
-                    <div key={q.id} style={{display: "flex", flexDirection: "row", justifyContent: "top", width: "100%"}}>
+                    <div key={q.id}
+                         style={{display: "flex", flexDirection: "row", justifyContent: "top", width: "100%"}}>
                         <div style={{width: "100%"}}>
                             <TextInput value={q.question} setValue={(val) => {
                                 let copy_questions = [...vacancy.questions]
@@ -137,7 +150,10 @@ const VacancyForm = () => {
                         <div>
                             <Image className="delete-img" src={require("../images/delete.png")}
                                    onClick={() => {
-                                       setVacancy({...vacancy, questions: vacancy.questions.filter(quest => quest != q)})
+                                       setVacancy({
+                                           ...vacancy,
+                                           questions: vacancy.questions.filter(quest => quest != q)
+                                       })
                                    }}
                                    onMouseOver={(e) => {
                                        //@ts-ignore
@@ -152,10 +168,15 @@ const VacancyForm = () => {
                     </div>
                 )}
 
-                <Btn text={"Добавить тестовый вопрос"} onClick={() => {
-                    setVacancy({...vacancy, questions: [...vacancy.questions, {question: "", variants: [], answer: ""}]})
-                    // setQuestions([...questions, {question: "", variants: [], answer: "", vacancyId: 0}])
-                }}/>
+                <div>
+                    <Btn text={"Добавить тестовый вопрос"} onClick={() => {
+                        setVacancy({
+                            ...vacancy,
+                            questions: [...vacancy.questions, {question: "", variants: [], answer: ""}]
+                        })
+                        // setQuestions([...questions, {question: "", variants: [], answer: "", vacancyId: 0}])
+                    }}/>
+                </div>
                 <Btn className="publish" text={"Опубликовать вакансию"} onClick={() => {
                     console.log(vacancy)
                     createVacancy(vacancy).then(() => {

@@ -98,13 +98,13 @@ const Search = () => {
     }, [])
 
     useEffect(() => {
-        Promise.all([getProfessions(), getCities(), getWorkExperiences()]).then(
-            ([professions, cities, experiences]: [IProfession[], ICity[], IWorkExperience[]]) => {
-                setProfessions(professions)
-                setCities(cities)
-                setExperiences(experiences)
-            }
-        )
+        // Promise.all([getProfessions(), getCities(), getWorkExperiences()]).then(
+        //     ([professions, cities, experiences]: [IProfession[], ICity[], IWorkExperience[]]) => {
+        //         setProfessions(professions)
+        //         setCities(cities)
+        //         setExperiences(experiences)
+        //     }
+        // )
         isAuth().then(() => {
             user?.role == "USER"
                 ? getResumesByUser(user.id).then(

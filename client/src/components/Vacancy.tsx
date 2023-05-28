@@ -4,8 +4,9 @@ import TagsContainer from "../ui/TagsContainer";
 import {getResumeSkills} from "../http/resumeSkillsApi";
 import {getSkillById} from "../http/skillApi";
 import {getVacancySkills} from "../http/vacancySkillsApi";
+import "./css/Vacancy.css"
 
-const Vacancy: FC<{data: IVacancy}> = ({data}) => {
+const Vacancy: FC<{ data: IVacancy }> = ({data}) => {
 
     const [skills, setSkills] = useState<ISkill[]>()
     useEffect(() => {
@@ -18,16 +19,51 @@ const Vacancy: FC<{data: IVacancy}> = ({data}) => {
 
     return (
         <div className="vacancy">
-            <h2>{data?.companyName}</h2>
-            <h2>{data?.profession} - {data?.post}</h2>
-            <p>{data?.city}</p>
-            <p>{data?.salary}</p>
-            <p>{data?.workExperience}</p>
-            <p>{data?.todos}</p>
-            <p>{data?.requirements}</p>
-            <p>{data?.desirable}</p>
-            <p>{data?.offer}</p>
-            <h3>Ключевые навыки</h3>
+
+            <h3>{data?.companyName}: {data?.profession} - {data?.post}</h3>
+
+            <div className="info-container">
+                <div className="line">
+                    <p>Зарплата:</p>
+                    <p>{data?.salary}</p>
+                </div>
+                <div className="line">
+                    <p>Требуемый опыт работы:</p>
+                    <p> {data?.workExperience}</p>
+                </div>
+            </div>
+
+            <h3>Обязанности</h3>
+            <div className="info-container">
+                <div className="line">
+                    <p>{data?.todos}</p>
+                </div>
+            </div>
+
+            <h3>Требования</h3>
+            <div className="info-container">
+                <div className="line">
+                    <p>{data?.requirements}</p>
+                </div>
+            </div>
+
+            <h3>Желательно</h3>
+            <div className="info-container">
+                <div className="line">
+                    <p>{data?.desirable}</p>
+                </div>
+            </div>
+
+            <h3>Мы предлагаем</h3>
+            <div className="info-container">
+                <div className="line">
+                    <p>{data?.offer}</p>
+                </div>
+            </div>
+
+            <div className="line">
+                <h3>Ключевые навыки</h3>
+            </div>
             <TagsContainer tags={skills ? skills.map(s => s.skill) : []}/>
         </div>
     );

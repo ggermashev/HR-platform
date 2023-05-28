@@ -98,6 +98,7 @@ const Matches = () => {
                         <Chat
                             newMessages={newMessages}
                             setNewMessages={setNewMessages}
+                            setContacts={setContacts}
                             onBack={() => {
                                 //@ts-ignore
                                 chat.current.style.display = "none"

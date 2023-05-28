@@ -1,0 +1,53 @@
+.about {
+  min-height: 90vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  div {
+    display: flex;
+    width: 70%;
+    border: 10px solid black;
+    margin: 50px;
+    min-height: 600px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    border-radius: 50px;
+    background-color: #8860D0;
+
+     h3 {
+       text-align: center;
+       font-size: 64px;
+       color: white;
+     }
+  }
+
+  .profile-info {
+    align-self: start;
+  }
+
+  .likes-info {
+    align-self: end;
+
+  }
+
+  .matches-info {
+    align-self: start;
+  }
+
+  .chat-info {
+    align-self: end;
+  }
+
+  .tests-info {
+    align-self: start;
+  }
+
+}

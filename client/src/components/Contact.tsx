@@ -41,9 +41,9 @@ const Contact: FC<IContact> = ({id, click, contactId, lastMsg}) => {
             <div className="content">
                 {user.role === 'USER'
                     ?// @ts-ignore
-                    <div className="title"><h3>{contact.companyName}: {contact?.profession} - {contact?.post}</h3></div>
+                    <div className="title"><h3>{contact?.companyName}: {contact?.profession} - {contact?.post}</h3></div>
                     :// @ts-ignore
-                    <div className="title"><h3>{contact.userName}: {contact?.profession} - {contact?.post}</h3></div>
+                    <div className="title"><h3>{contact?.userName}: {contact?.profession} - {contact?.post}</h3></div>
                 }
                 <div className="msg"><p>{lastMsg}</p></div>
             </div>

@@ -6,11 +6,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {store} from "../redux";
 import {setChatId} from "../redux/activeChatSlice";
 import Calendar from "./Calendar";
-import {IMessage, IResume, ITestResult, IUser, IVacancy} from "../types/types";
-import {getContact} from "../http/contactApi";
+import {IContact, IMessage, IResume, ITestResult, IUser, IVacancy} from "../types/types";
+import {deleteContact, getContact, getContactsByResume, getContactsByVacancy} from "../http/contactApi";
 import {getMessages, sendMessage} from "../http/messageApi";
-import {getVacancy} from "../http/vacancyApi";
-import {getResume} from "../http/resumeApi";
+import {getVacanciesByUser, getVacancy} from "../http/vacancyApi";
+import {getResume, getResumesByUser} from "../http/resumeApi";
 import {useAppSelector} from "../hooks/reduxHooks";
 import {io, Socket} from "socket.io-client";
 import {DefaultEventsMap} from '@socket.io/component-emitter';
@@ -22,17 +22,18 @@ import {Dropdown} from "react-bootstrap";
 import DropDownBtns from "../ui/DropDownBtns";
 import Test from "./Test";
 import {getTestResult} from "../http/testResultsApi";
-import {addNewMessage} from "../http/newMessageApi";
+import {addNewMessage, getNewMessages} from "../http/newMessageApi";
 
 interface IChat {
     onBack?: () => void,
     vacancyId?: number,
     newMessages: { chatId: number, status: boolean }[],
-    setNewMessages: (nmsgs: { chatId: number, status: boolean }[]) => void
+    setNewMessages: (nmsgs: { chatId: number, status: boolean }[]) => void,
+    setContacts: (c: IContact[]) => void
 }
 
 
-const Chat: FC<IChat> = ({onBack, vacancyId, setNewMessages, newMessages}) => {
+const Chat: FC<IChat> = ({onBack, vacancyId, setNewMessages, newMessages, setContacts}) => {
     const [msg, setMsg] = useState("")
     const dispatch = useDispatch()
     const chatId = useAppSelector(state => state.activeChat.id)
@@ -136,6 +137,33 @@ const Chat: FC<IChat> = ({onBack, vacancyId, setNewMessages, newMessages}) => {
 
                                         }}/>,
                                         <Btn text={"Отказать"} onClick={() => {
+                                            deleteContact(chatId).then(val => {
+                                                user.role === 'USER'
+                                                    ? getResumesByUser(user.id).then(resumes => {
+                                                        const new_contacts: IContact[] = []
+                                                        Promise.all(resumes.map((resume: { id: number; }) => getContactsByResume(resume.id))).then(contactss => {
+                                                            for (let contacts of contactss) {
+                                                                for (let contact of contacts) {
+                                                                    new_contacts.push(contact)
+                                                                }
+                                                            }
+                                                            setContacts(new_contacts)
+                                                        })
+                                                    })
+                                                    :
+                                                    getVacanciesByUser(user.id).then(vacs => {
+                                                        const new_contacts: IContact[] = []
+                                                        Promise.all(vacs.map((vac: { id: number; }) => getContactsByVacancy(vac.id))).then(contactss => {
+                                                            for (let contacts of contactss) {
+                                                                for (let contact of contacts) {
+                                                                    new_contacts.push(contact)
+                                                                }
+                                                            }
+                                                            setContacts(new_contacts)
+                                                        })
+                                                    })
+                                                onBack && onBack()
+                                            })
                                         }}/>,
                                     ]}/>}
                                 {user.role === 'HR'
@@ -154,6 +182,33 @@ const Chat: FC<IChat> = ({onBack, vacancyId, setNewMessages, newMessages}) => {
                                                          <Btn text={"Предложить собеседование"} onClick={() => {
                                                          }}/>,
                                                          <Btn text={"Отказать"} onClick={() => {
+                                                             deleteContact(chatId).then(val => {
+                                                                 user.role === 'USER'
+                                                                     ? getResumesByUser(user.id).then(resumes => {
+                                                                         const new_contacts: IContact[] = []
+                                                                         Promise.all(resumes.map((resume: { id: number; }) => getContactsByResume(resume.id))).then(contactss => {
+                                                                             for (let contacts of contactss) {
+                                                                                 for (let contact of contacts) {
+                                                                                     new_contacts.push(contact)
+                                                                                 }
+                                                                             }
+                                                                             setContacts(new_contacts)
+                                                                         })
+                                                                     })
+                                                                     :
+                                                                     getVacanciesByUser(user.id).then(vacs => {
+                                                                         const new_contacts: IContact[] = []
+                                                                         Promise.all(vacs.map((vac: { id: number; }) => getContactsByVacancy(vac.id))).then(contactss => {
+                                                                             for (let contacts of contactss) {
+                                                                                 for (let contact of contacts) {
+                                                                                     new_contacts.push(contact)
+                                                                                 }
+                                                                             }
+                                                                             setContacts(new_contacts)
+                                                                         })
+                                                                     })
+                                                                 onBack && onBack()
+                                                             })
                                                          }}/>,
                                                      ]}/>}
                                 {/*<Btn className="delete-btn" text={"Удалить"} onClick={() => {*/}
@@ -170,7 +225,14 @@ const Chat: FC<IChat> = ({onBack, vacancyId, setNewMessages, newMessages}) => {
                                 {/*    <Calendar/>*/}
                                 {/*</div>*/}
                             </div>
-                            <div className="input-field">
+                            <div className="input-field" onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    sendMessage(msg, user.id, receiverId as number, chatId).then(val => {
+                                        socket.emit('chat message', val.id)
+                                        setMsg("")
+                                    })
+                                }
+                            }}>
                                 <Input text={"Сообщение"} value={msg} setValue={setMsg}/>
                                 <Btn style={{marginBottom: "20px"}} text={"отправить"} onClick={() => {
                                     sendMessage(msg, user.id, receiverId as number, chatId).then(val => {

@@ -44,7 +44,7 @@ function App() {
                     {user.isAuth && <Route path="/vacancy_form" element={<VacancyForm/>}/>}
                     {user.isAuth && <Route path="/matches" element={<Matches/>}/>}
                     {user.isAuth && <Route path="/resume_form" element={<ResumeForm/>}/>}
-                    <Route path="/search" element={<Search/>}/>
+                    {user.isAuth && <Route path="/search" element={<Search/>}/>}
                     {!user.isAuth && <Route path="/login" element={<Login/>}/>}
                     {!user.isAuth && <Route path="/registration" element={<Registration/>}/>}
                     {user.isAuth && <Route path="/logout" element={<Logout/>}/>}
