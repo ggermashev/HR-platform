@@ -70,11 +70,11 @@ class VacancyController {
                 }
             }
             for (let s of skills) {
-                let skill = Skill.findOne({where: {skill: s}})
+                let skill = await Skill.findOne({where: {skill: s}})
                 if (!skill) {
-                    skill = Skill.create({skill: s})
+                    skill = await Skill.create({skill: s})
                 }
-                const vacancySkill = VacancySkills.create({vacancyId: vacancy.id, skillId: skill.id})
+                const vacancySkill = await VacancySkills.create({vacancyId: vacancy.id, skillId: skill.id})
             }
             return res.json(vacancy)
         } catch (e) {

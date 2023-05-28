@@ -27,7 +27,8 @@ const ResumeForm = () => {
         universities: [],
         jobs: [],
         description: "",
-        skills: []
+        skills: [],
+        userName: `${user.firstName} ${user.lastName}`
     })
     const [tag, setTag] = useState("")
     const [display, setDisplay] = useState("none")
@@ -260,6 +261,7 @@ const ResumeForm = () => {
                 }
                 <Btn className="publish" text={"Опубликовать резюме"} onClick={() => {
                     createResume(resume).then(() => {
+                        console.log(resume.skills)
                         navigate('/profile')
                     })
                 }}/>

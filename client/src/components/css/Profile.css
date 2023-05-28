@@ -5,6 +5,17 @@
   align-items: center;
   width: 100%;
 }
+.profile .add-avatar {
+  position: relative;
+  visibility: hidden;
+  display: block;
+  margin: 0 auto;
+  top: -50%;
+}
+.profile .ava {
+  width: 100%;
+  border-radius: 100%;
+}
 .profile .row {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -24,10 +35,6 @@
   .profile {
     justify-content: space-between;
   }
-}
-.profile .ava {
-  width: 100%;
-  border-radius: 100%;
 }
 .profile .resumes {
   margin: 0;

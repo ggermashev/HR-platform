@@ -12,6 +12,7 @@ import {IContact, IResume, IVacancy} from "../types/types";
 import {getResume, getResumesByUser} from "../http/resumeApi";
 import {getContactsByResume, getContactsByVacancy} from "../http/contactApi";
 import {getVacancies, getVacanciesByUser, getVacancy} from "../http/vacancyApi";
+import {deleteNewMessage, getNewMessages} from "../http/newMessageApi";
 
 const Matches = () => {
     const chat = useRef(null)
@@ -21,6 +22,7 @@ const Matches = () => {
     // @ts-ignore
     const user = useSelector(state => state.user)
     const [contacts, setContacts] = useState<IContact[]>([])
+    const [newMessages, setNewMessages] = useState<{ chatId: number, status: boolean }[]>([])
 
     useEffect(() => {
         user.role === 'USER'
@@ -33,6 +35,17 @@ const Matches = () => {
                         }
                     }
                     setContacts(new_contacts)
+                    getNewMessages(user.id).then(msgs => {
+                        let messageStatuses = msgs.map((ms: { contactId: any; }) => { return {chatId: ms.contactId, status: true}})
+                        console.log(messageStatuses)
+                        for (let c of new_contacts) {
+                            if (messageStatuses.findIndex((ms: { chatId: number; }) => ms.chatId === c.id as number) == -1) {
+                                messageStatuses.push({chatId: c.id as number, status: false})
+                            }
+                        }
+                        setNewMessages(messageStatuses)
+                    })
+
                 })
             })
             :
@@ -45,6 +58,15 @@ const Matches = () => {
                         }
                     }
                     setContacts(new_contacts)
+                    getNewMessages(user.id).then(msgs => {
+                        let messageStatuses = msgs.map((ms: { contactId: any; }) => { return {chatId: ms.contactId, status: true}})
+                        for (let c of new_contacts) {
+                            if (messageStatuses.findIndex((ms: { chatId: number; }) => ms.chatId === c.id as number) == -1) {
+                                messageStatuses.push({chatId: c.id as number, status: false})
+                            }
+                        }
+                        setNewMessages(messageStatuses)
+                    })
                 })
             })
     }, [])
@@ -54,25 +76,34 @@ const Matches = () => {
             <Container fluid>
                 <Row>
                     <Col className="col contacts" xs={12} sm={12} md={4} ref={contactsRef}>
-                        {contacts.map(c =>
+                        {contacts.map((c, i) =>
                             <Contact key={c.id} id={c.id as number}
                                      contactId={user.role === 'USER' ? c.vacancyId as number : c.resumeId as number}
-                                     lastMsg={"msg"} click={(e) => {
-                                //@ts-ignore
-                                chat.current.style.display = "block"
-                                //@ts-ignore
-                                contactsRef.current.style.display = "none"
-                            }}/>
+                                     lastMsg={newMessages && newMessages.find(msg => msg.chatId === c.id)?.status ? "Новое сообщение" : "Новых сообщений нет"}
+                                     click={(e) => {
+                                         //@ts-ignore
+                                         chat.current.style.display = "block"
+                                         //@ts-ignore
+                                         contactsRef.current.style.display = "none"
+                                         deleteNewMessage(c.id as number, user.id).then (val => {
+                                             let copy_newMessages = [...newMessages]
+                                             const j = copy_newMessages.findIndex(msg =>  msg.chatId === c.id as number)
+                                             copy_newMessages[j].status = false
+                                             setNewMessages(copy_newMessages)
+                                         })
+                                     }}/>
                         )}
-
                     </Col>
                     <Col className="col col-chat" xs={12} sm={12} md={8} ref={chat}>
-                        <Chat onBack={() => {
-                            //@ts-ignore
-                            chat.current.style.display = "none"
-                            //@ts-ignore
-                            contactsRef.current.style.display = "block"
-                        }}/>
+                        <Chat
+                            newMessages={newMessages}
+                            setNewMessages={setNewMessages}
+                            onBack={() => {
+                                //@ts-ignore
+                                chat.current.style.display = "none"
+                                //@ts-ignore
+                                contactsRef.current.style.display = "block"
+                            }}/>
                     </Col>
                 </Row>
             </Container>

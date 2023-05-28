@@ -60,6 +60,8 @@ export interface IUser {
     lastName: string,
     login: string,
     password: string,
+    phone?: string,
+
     role: "USER" | "HR",
 }
 
@@ -93,7 +95,9 @@ export interface IWorkExperience {
 
 export interface ISkill {
     id?: number,
-    skill: string
+    skill: string,
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 export interface ICity {
@@ -115,6 +119,7 @@ export interface IJob {
 export interface IResume {
     id?: number,
     userId: number | null,
+    userName: string,
     profession: string,
     post: string,
     city: string,
@@ -145,6 +150,16 @@ export interface IVacancy {
     skills: string[],
     questions: IQuestion[],
     // answerVariants: IAnswerVariant[],
+    createdAt?: string,
+    updatedAt?: string,
+}
+
+export interface ITestResult {
+    id?: number,
+    points: number
+    maxPoints: number,
+    userId: number,
+    vacancyId: number,
     createdAt?: string,
     updatedAt?: string,
 }

@@ -1,8 +1,21 @@
-import React, {FC} from 'react';
-import {IVacancy} from "../types/types";
+import React, {FC, useEffect, useState} from 'react';
+import {ISkill, IVacancy} from "../types/types";
 import TagsContainer from "../ui/TagsContainer";
+import {getResumeSkills} from "../http/resumeSkillsApi";
+import {getSkillById} from "../http/skillApi";
+import {getVacancySkills} from "../http/vacancySkillsApi";
 
 const Vacancy: FC<{data: IVacancy}> = ({data}) => {
+
+    const [skills, setSkills] = useState<ISkill[]>()
+    useEffect(() => {
+        getVacancySkills(data.id as number).then(vals => {
+            Promise.all(vals.map((v: { skillId: number; }) => getSkillById(v.skillId))).then(vals => {
+                setSkills(vals)
+            })
+        })
+    }, [])
+
     return (
         <div className="vacancy">
             <h2>{data?.companyName}</h2>
@@ -15,7 +28,7 @@ const Vacancy: FC<{data: IVacancy}> = ({data}) => {
             <p>{data?.desirable}</p>
             <p>{data?.offer}</p>
             <h3>Ключевые навыки</h3>
-            <TagsContainer tags={data?.skills}/>
+            <TagsContainer tags={skills ? skills.map(s => s.skill) : []}/>
         </div>
     );
 };

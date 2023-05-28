@@ -1,15 +1,18 @@
 import React, {FC, Fragment, useEffect, useState} from 'react';
 import "./css/Resume.css"
 import TagsContainer from "../ui/TagsContainer";
-import {IJob, IResume, IUniversity} from "../types/types";
+import {IJob, IResume, ISkill, IUniversity} from "../types/types";
 import {getUniversities} from "../http/universityApi";
 import {getJobsByResume} from "../http/jobApi";
+import {getResumeSkills} from "../http/resumeSkillsApi";
+import {getSkillById} from "../http/skillApi";
 
 
 const Resume: FC<{data: IResume}> = ({data}) => {
 
     const [universities, setUniversities] = useState<IUniversity[]>()
     const [jobs, setJobs] = useState<IJob[]>()
+    const [skills, setSkills] = useState<ISkill[]>()
 
     useEffect(() => {
         if (data && data.id) {
@@ -18,6 +21,11 @@ const Resume: FC<{data: IResume}> = ({data}) => {
             })
             getJobsByResume(data.id).then(vals => {
                 setJobs(vals)
+            })
+            getResumeSkills(data.id).then(vals => {
+                Promise.all(vals.map((v: { skillId: number; }) => getSkillById(v.skillId))).then(vals => {
+                    setSkills(vals)
+                })
             })
         }
     }, [])
@@ -98,7 +106,7 @@ const Resume: FC<{data: IResume}> = ({data}) => {
                 <p>{data?.description}</p>
             </div>
             <h3>Ключевые навыки</h3>
-            <TagsContainer tags={data?.skills}/>
+            <TagsContainer tags={skills ? skills.map(s => s.skill) : []}/>
         </div>
     );
 };

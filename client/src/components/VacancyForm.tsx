@@ -76,8 +76,10 @@ const VacancyForm = () => {
                             <h3>Ключевые навыки</h3>
                         </Col>
                         <Col xs={8} sm={8}>
-                            <TagsInput tags={vacancy.skills} setTags={s => setVacancy({...vacancy, skills: [...s]})}
-                                       display={display} setDisplay={setDisplay} text={"Навыки"} value={tag}
+                            <TagsInput tags={vacancy.skills}
+                                       setTags={s => setVacancy({...vacancy, skills: [...s]})}
+                                       display={display}
+                                       setDisplay={setDisplay} text={"Навыки"} value={tag}
                                        setValue={setTag}/>
                         </Col>
                     </Row>
@@ -155,7 +157,7 @@ const VacancyForm = () => {
                     // setQuestions([...questions, {question: "", variants: [], answer: "", vacancyId: 0}])
                 }}/>
                 <Btn className="publish" text={"Опубликовать вакансию"} onClick={() => {
-                    console.log(vacancy.questions)
+                    console.log(vacancy)
                     createVacancy(vacancy).then(() => {
                         navigate('/profile')
                     })

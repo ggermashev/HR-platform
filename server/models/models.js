@@ -43,14 +43,14 @@ const City = sequelize.define('city', {
 
 const Question = sequelize.define('question', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    question: {type: DataTypes.STRING(512), },
-    answer: {type: DataTypes.STRING(512)}
+    question: {type: DataTypes.STRING(2048), },
+    answer: {type: DataTypes.STRING(1024)}
     //vacancyId
 })
 
 const AnswerVariant = sequelize.define('answer_variant', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    variant: {type: DataTypes.STRING(512)},
+    variant: {type: DataTypes.STRING(1024)},
     //questionID
 })
 
@@ -89,7 +89,7 @@ const Job = sequelize.define('job', {
     companyName: {type: DataTypes.STRING},
     profession: {type: DataTypes.STRING},
     post: {type: DataTypes.STRING},
-    todos: {type: DataTypes.STRING(512)},
+    todos: {type: DataTypes.STRING(2048)},
     workFrom: {type: DataTypes.INTEGER},
     workTo: {type: DataTypes.INTEGER},
     //resumeId
@@ -98,6 +98,7 @@ const Job = sequelize.define('job', {
 const Resume = sequelize.define('resume', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     //userId
+    userName: {type: DataTypes.STRING},
     profession: {type: DataTypes.STRING},
     post: {type: DataTypes.STRING},
     city: {type: DataTypes.STRING},
@@ -143,6 +144,17 @@ const TestResults = sequelize.define('test_results', {
     points: {type: DataTypes.INTEGER},
     maxPoints: {type: DataTypes.INTEGER},
 })
+
+const NewMessage = sequelize.define("new_message", {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    //ContactId
+    //userId
+})
+
+User.hasMany(NewMessage)
+NewMessage.belongsTo(User)
+Contact.hasMany(NewMessage)
+NewMessage.belongsTo(Contact)
 
 Question.hasMany(AnswerVariant, {
     onDelete: 'CASCADE'
@@ -237,5 +249,6 @@ module.exports = {
     VacancySkills,
     WatchedVacancies,
     WatchedResumes,
-    TestResults
+    TestResults,
+    NewMessage
 }

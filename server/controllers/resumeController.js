@@ -50,21 +50,22 @@ class ResumeController {
 
     async create(req, res, next) {
         try {
-            const {userId, profession, post, city, salary, education, workExperience, description, universities, jobs, skills} =  req.body
-            const resume = await Resume.create({userId, profession, post, city, salary, education, workExperience, description})
+            const {userId, userName, profession, post, city, salary, education, workExperience, description, universities, jobs, skills} =  req.body
+            const resume = await Resume.create({userId, userName, profession, post, city, salary, education, workExperience, description})
             for (let univ of universities) {
                 const university = await University.create({name: univ.name, faculty: univ.faculty,
                     specialization: univ.specialization, graduationYear: univ.graduationYear, resumeId: resume.id})
             }
             for (let job of jobs) {
-                const j = Job.create({companyName: job.companyName, profession: job.profession, post: job.post,
+                const j = await Job.create({companyName: job.companyName, profession: job.profession, post: job.post,
                     todos: job.todos, workFrom: job.workFrom, workTo: job.workTo, resumeId: resume.id})
             }
             for (let s of skills) {
-                let skill = Skill.findOne({where: {skill: s}})
+                let skill = await Skill.findOne({where: {skill: s}})
                 if (!skill) {
-                    skill = Skill.create({skill: s})
+                    skill = await Skill.create({skill: s})
                 }
+                console.log(skill)
                 const resumeSkill = await ResumeSkills.create({resumeId: resume.id, skillId: skill.id})
             }
             return res.json(resume)

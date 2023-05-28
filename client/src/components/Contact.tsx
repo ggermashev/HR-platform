@@ -24,6 +24,7 @@ const Contact: FC<IContact> = ({id, click, contactId, lastMsg}) => {
     // @ts-ignore
     const user = useSelector(state => state.user)
     const [contact, setContact] = useState<IResume | IVacancy>()
+    const [opponent, setOpponent] = useState<IUser>()
 
 
     useEffect(() => {
@@ -37,12 +38,14 @@ const Contact: FC<IContact> = ({id, click, contactId, lastMsg}) => {
             click(e)
             dispatch(setChatId(id))
         }}>
-            <div className="photo">
-                <Image src={require("../images/ava.jpg")}/>
-            </div>
             <div className="content">
-                <div className="title"><p>{contact?.profession} - {contact?.post}</p></div>
-                {/*<div className="msg"><p>{lastMsg}</p></div>*/}
+                {user.role === 'USER'
+                    ?// @ts-ignore
+                    <div className="title"><h3>{contact.companyName}: {contact?.profession} - {contact?.post}</h3></div>
+                    :// @ts-ignore
+                    <div className="title"><h3>{contact.userName}: {contact?.profession} - {contact?.post}</h3></div>
+                }
+                <div className="msg"><p>{lastMsg}</p></div>
             </div>
         </div>
     );

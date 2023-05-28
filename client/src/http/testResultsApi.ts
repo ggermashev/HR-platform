@@ -3,6 +3,7 @@ import {IAnswerVariant} from "../types/types";
 
 export const getTestResult = async (vacancyId: number, userId: number) => {
     const {data} = await $host.get(`api/test_results/${vacancyId}/${userId}`)
+    console.log(data)
     return data
 }
 

@@ -7,7 +7,7 @@ import FormRadio from "../ui/FormRadio";
 import {Simulate} from "react-dom/test-utils";
 import copy = Simulate.copy;
 import {useAppSelector} from "../hooks/reduxHooks";
-import {IAnswerVariant, IQuestion} from "../types/types";
+import {IAnswerVariant, IQuestion, ITestResult} from "../types/types";
 import {addTestResult, getTestResult} from "../http/testResultsApi";
 import {getVacancy} from "../http/vacancyApi";
 import {getQuestionsByVacancy} from "../http/questionApi";
@@ -16,9 +16,10 @@ import {getAnswerVariants} from "../http/answerVariantApi";
 interface ITest {
     onBack: () => void,
     vacancyId: number,
+    setTestResults: (tr: ITestResult) => void
 }
 
-const Test: FC<ITest> = ({onBack, vacancyId}) => {
+const Test: FC<ITest> = ({onBack, vacancyId, setTestResults}) => {
     const user = useAppSelector(state => state.user)
     const [testInProgress, setTestInProgress] = useState(false)
     const [testComplited, setTestComplited] = useState(false)
@@ -82,7 +83,8 @@ const Test: FC<ITest> = ({onBack, vacancyId}) => {
                         : !testInProgress
                             ? <div>
                                 <p>Нажимая на кнопку вы запустите тест,
-                                    который продлится 10 минут</p>
+                                    который можно пройти один раз. При закрытии или обновлении
+                                    страницы результаты теста отправятся.</p>
                                 <Btn text={"Начать тест"} onClick={() => {
                                     setTestInProgress(true)
                                 }}></Btn>

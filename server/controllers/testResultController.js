@@ -6,6 +6,7 @@ class TestResultController {
         try {
             const {vacancyId, userId} = req.params
             const testResult = await TestResults.findOne({where: {vacancyId, userId}})
+            console.log(testResult)
             return res.json(testResult)
         } catch (e) {
             return next(ApiError.badRequest(e))

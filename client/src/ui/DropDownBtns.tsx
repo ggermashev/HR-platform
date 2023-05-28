@@ -15,7 +15,7 @@ const DropDownBtns: FC<IDropDownBtns> = ({title, items, className}) => {
                 {title}
             </Dropdown.Toggle>
             <Dropdown.Menu>
-                {items.map(i => <Dropdown.Item href="#">{i}</Dropdown.Item>)}
+                {items.map(i => <Dropdown.Item href="#" onClick={(e) => {e.stopPropagation()}}>{i}</Dropdown.Item>)}
             </Dropdown.Menu>
         </Dropdown>
     );

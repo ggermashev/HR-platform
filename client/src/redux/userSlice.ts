@@ -17,7 +17,8 @@ const userSlice = createSlice({
         firstName: user.firstName,
         lastName: user.lastName,
         login: user.login,
-        isAuth: false
+        isAuth: false,
+        phone: ""
     },
     reducers: {
         setUser(state, action) {
@@ -26,6 +27,7 @@ const userSlice = createSlice({
             state.firstName = action.payload.firstName
             state.lastName = action.payload.lastName
             state.login = action.payload.login
+            state.phone = action.payload.phone
             state.isAuth = true
         },
         clearUser(state) {
@@ -34,6 +36,7 @@ const userSlice = createSlice({
             state.firstName = ""
             state.lastName = ""
             state.login = ""
+            state.phone = ""
             state.isAuth = false
         },
         setIsAuth(state, action) {

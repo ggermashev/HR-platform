@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useReducer, useState} from 'react';
+import React, {FC, useCallback, useEffect, useReducer, useState} from 'react';
 import Btn from "../ui/Btn";
 import "./css/Chat.css"
 import Input from "../ui/Input";
@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {store} from "../redux";
 import {setChatId} from "../redux/activeChatSlice";
 import Calendar from "./Calendar";
-import {IMessage, IResume, IUser, IVacancy} from "../types/types";
+import {IMessage, IResume, ITestResult, IUser, IVacancy} from "../types/types";
 import {getContact} from "../http/contactApi";
 import {getMessages, sendMessage} from "../http/messageApi";
 import {getVacancy} from "../http/vacancyApi";
@@ -21,14 +21,18 @@ import DropDowns from "../ui/DropDowns";
 import {Dropdown} from "react-bootstrap";
 import DropDownBtns from "../ui/DropDownBtns";
 import Test from "./Test";
+import {getTestResult} from "../http/testResultsApi";
+import {addNewMessage} from "../http/newMessageApi";
 
 interface IChat {
     onBack?: () => void,
     vacancyId?: number,
+    newMessages: { chatId: number, status: boolean }[],
+    setNewMessages: (nmsgs: { chatId: number, status: boolean }[]) => void
 }
 
 
-const Chat: FC<IChat> = ({onBack, vacancyId}) => {
+const Chat: FC<IChat> = ({onBack, vacancyId, setNewMessages, newMessages}) => {
     const [msg, setMsg] = useState("")
     const dispatch = useDispatch()
     const chatId = useAppSelector(state => state.activeChat.id)
@@ -38,6 +42,8 @@ const Chat: FC<IChat> = ({onBack, vacancyId}) => {
     const [receiverId, setReceiverId] = useState<number>(-1)
     const [testWatching, setTestWatching] = useState(false)
     const [vacancyID, setVacancyId] = useState(-1)
+    const [testBtnText, setTestBtnText] = useState("Результаты теста")
+    const [testResults, setTestResults] = useState<ITestResult>()
 
     // const socket = new WebSocket('ws://localhost:5000/')
     // socket.onmessage = (event) => {
@@ -51,23 +57,34 @@ const Chat: FC<IChat> = ({onBack, vacancyId}) => {
     //     }
     // }
 
-    useEffect(() => {
-        function onMessage(msg: string) {
-            const [chatId, userIdFrom, userIdTo] = msg.split(' ')
-            console.log(msg)
-            if (parseInt(userIdFrom) == user.id || parseInt(userIdTo) == user.id) {
-                getMessages(parseInt(chatId)).then(vals => {
-                    setMessages(vals)
-                })
-            }
+    const onMessage = useCallback((msg: string) => {
+        const [chatId, userIdFrom, userIdTo] = msg.split(' ')
+        if (parseInt(userIdFrom) == user.id) {
+            getMessages(parseInt(chatId)).then(vals => {
+                setMessages(vals)
+            })
         }
+        if (parseInt(userIdTo) == user.id) {
+            getMessages(parseInt(chatId)).then(vals => {
+                setMessages(vals)
+                addNewMessage(parseInt(chatId), parseInt(userIdTo)).then(val => {
+                    let copy_newMessages = [...newMessages]
+                    const j = copy_newMessages.findIndex(c => c.chatId === parseInt(chatId))
+                    copy_newMessages[j].status = true
+                    setNewMessages(copy_newMessages)
+                })
+            })
+        }
+    }, [newMessages])
 
+
+    useEffect(() => {
         socket.on('chat message', onMessage)
 
         return () => {
             socket.off('chat message', onMessage)
         }
-    }, [])
+    }, [onMessage])
 
     useEffect(() => {
         if (chatId !== -1) {
@@ -82,6 +99,10 @@ const Chat: FC<IChat> = ({onBack, vacancyId}) => {
                     })
                 } else {
                     getResume(val.resumeId).then(res => {
+                        getTestResult(val.vacancyId, res.userId).then(result => {
+                            console.log(result);
+                            setTestResults(result)
+                        })
                         setReceiverId(res.userId)
                     })
                 }
@@ -111,19 +132,28 @@ const Chat: FC<IChat> = ({onBack, vacancyId}) => {
                                         <Btn text={"Пройти тест"} onClick={() => {
                                             setTestWatching(true)
                                         }}/>,
-                                        <Btn text={"Отказать"} onClick={() => {
+                                        <Btn text={"Выбрать дату собеседования"} onClick={() => {
+
                                         }}/>,
-                                        <Btn text={"Профиль"} onClick={() => {
+                                        <Btn text={"Отказать"} onClick={() => {
                                         }}/>,
                                     ]}/>}
                                 {user.role === 'HR'
                                     && <DropDownBtns className="delete-btn" title={"Меню"}
                                                      items={[
-                                                         <Btn text={"Результаты теста"} onClick={() => {
+                                                         <Btn text={testBtnText} onClick={() => {
+                                                             console.log(testResults)
+                                                             if (testResults && testBtnText == "Результаты теста") {
+                                                                 setTestBtnText(`${testResults.points} / ${testResults.maxPoints}`)
+                                                             } else if (!testResults && testBtnText == "Результаты теста") {
+                                                                 setTestBtnText("Тест еще не пройден")
+                                                             } else if (testBtnText !== "Результаты теста") {
+                                                                 setTestBtnText("Результаты теста")
+                                                             }
+                                                         }}/>,
+                                                         <Btn text={"Предложить собеседование"} onClick={() => {
                                                          }}/>,
                                                          <Btn text={"Отказать"} onClick={() => {
-                                                         }}/>,
-                                                         <Btn text={"Профиль"} onClick={() => {
                                                          }}/>,
                                                      ]}/>}
                                 {/*<Btn className="delete-btn" text={"Удалить"} onClick={() => {*/}
@@ -154,7 +184,14 @@ const Chat: FC<IChat> = ({onBack, vacancyId}) => {
                         : <></>
                     }
                 </div>
-                : user.role == 'USER' && <Test onBack={() => {setTestWatching(false)}} vacancyId={vacancyID}/>
+                : user.role == 'USER' &&
+                <Test
+                    onBack={() => {
+                        setTestWatching(false)
+                    }}
+                    vacancyId={vacancyID}
+                    setTestResults={setTestResults}
+                />
             }
         </>
 
